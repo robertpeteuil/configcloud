@@ -16,7 +16,7 @@ git clone --depth 1 https://github.com/robertpeteuil/configcloud.git .configclou
 
 ### Installation
 
-Once the repo is downloaded, `cd` into its directory and run the installer in help or test mode. The installer is named `install.sh` and supports many optional parameters including `-h` for help.
+After download, `cd` into the directory and run the installer named `install.sh`.  It supports many parameters including `-h` for help.
 
 ``` shell
 cd ~/.configcloud

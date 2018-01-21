@@ -24,14 +24,14 @@ cd ~/.configcloud
 # display help - lists paramaters and options for the installer
 ./install.sh -h     
 
-# Test-Installation (-t) with Details (-d)
+# Simulated Test-Installation & display details
 ./install.sh -t -d
 
-# Installs the configfiles without overwriting any existing files, and displays details (-d)
+# Install & display details without overwriting existing files
 ./install.sh -d
 
-# installs the configfiles, overrights any existing files (usually '.bash_profile' and '.bashrc'), and displays details (-d)
+# Install & display details, overright existing files (usually '.bash_profile' and '.bashrc')
 ./install.sh -d -f 
 ```
 
-Once configfile has been installed, log out & back in to have access to the new settings, alises and functions.  After initial installation, a logout/login step is not required for future updates as you can use the `reload` alias defined in `configcloud`.
+Once configcloud is installed, log out & back in to apply the new settings, alises and functions.  After the first installation, a logout/login can be achieved by using the `reload` alias defined in the `aliases` file.

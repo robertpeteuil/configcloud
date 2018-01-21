@@ -8,12 +8,11 @@
 #
 
 export aliasfilename=".aliases"     # shellcheck disable=SC2034
-export aliasfilenum="2.0.0"        # shellcheck disable=SC2034
+export aliasfilenum="2.0.1"         # shellcheck disable=SC2034
 export aliasfiledate="2018-01-21"   # shellcheck disable=SC2034
 
 ###### DEFINES
 GIT_UPDATE=False
-CONFIGFILES_DIR=""
 
 ###### VARS
 OS=$(uname -s)
@@ -21,9 +20,9 @@ GIT_INST=$(git help)
 
 update-repos () {
   GIT_INST=$(git help)
-  if [[ -e "$HOME/.configfiles/.git" ]] && [[ -n $GIT_INST ]]; then
-    echo -e "\n${GREEN}Updating .configfile repo...${WHITE}"
-    cd "$HOME/.configfiles"; git pull; cd ~
+  if [[ -e "$HOME/.configcloud/.git" ]] && [[ -n $GIT_INST ]]; then
+    echo -e "\n${GREEN}Updating .configcloud repo...${WHITE}"
+    cd "$HOME/.configcloud"; git pull; cd ~
     GIT_UPDATE=True
   fi
 }
@@ -82,9 +81,9 @@ update-all() {
     # shellcheck disable=SC2139
     alias cd2v="cd ${HOME}/Versioned"
   fi
-  if [ -d "${HOME}/.configfiles" ] ; then
+  if [ -d "${HOME}/.configcloud" ] ; then
     # shellcheck disable=SC2139
-    alias cd2cf="cd ${HOME}/.configfiles"
+    alias cd2cf="cd ${HOME}/.configcloud"
   fi
 
 #### DOCKER

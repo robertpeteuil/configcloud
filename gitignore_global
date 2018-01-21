@@ -1,0 +1,201 @@
+# UPDATED:  2017-01-21
+
+# Personal #
+############
+*private
+.private
+*.private
+zref*
+zref-*
+
+# IDES
+###################
+.idea*
+vent*/
+# .vscode/
+# *.sublime-workspace
+# .mr.developer.cfg
+# .project
+# .pydevproject
+
+# Compiled source #
+###################
+*.com
+*.dll
+*.exe
+*.out
+*.app
+*.class
+*.o
+*.so
+*.so.*
+*.dylib
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+*~
+!.gitignore
+
+# C #
+#####
+# Libraries
+*.lib
+*.a
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+# *.log
+*.sql
+*.sqlite
+
+# Node.js #
+###########
+# lib-cov
+# *.seed
+# *.log
+# *.csv
+# *.dat
+# *.out
+# *.pid
+# *.gz
+# pids
+# logs
+# results
+# npm-debug.log
+# node_modules
+
+# Python #
+##########
+.py[cod]
+*.egg
+*.egg-info
+__pycache__
+dist
+sdist
+build
+# eggs
+# parts
+# bin
+# var
+# develop-eggs
+# .installed.cfg
+# lib
+# lib64
+
+# Installer logs
+# pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+# nosetests.xml
+
+# Translations
+# *.mo
+
+# Objective-C #
+###############
+# Xcode
+# .DS_Store
+# */build/*
+# *.pbxuser
+# !default.pbxuser
+# *.mode1v3
+# !default.mode1v3
+# *.mode2v3
+# !default.mode2v3
+# *.perspectivev3
+# !default.perspectivev3
+# xcuserdata
+# profile
+# *.moved-aside
+# DerivedData
+# *.hmap
+
+# Ruby #
+########
+# *.gem
+# *.rbc
+# .bundle
+# .config
+# coverage
+# InstalledFiles
+# lib/bundler/man
+# pkg
+# rdoc
+# spec/reports
+# test/tmp
+# test/version_tmp
+# tmp
+
+# YARD artifacts
+# .yardoc
+# _yardoc
+# doc/
+
+# Rails #
+#########
+# *.rbc
+# *.sassc
+# .sass-cache
+# capybara-*.html
+# .rspec
+# .rvmrc
+# /.bundle
+# /vendor/bundle
+# /log/*
+# /tmp/*
+# /db/*.sqlite3
+# /public/system/*
+# /coverage/
+# /spec/tmp/*
+# **.orig
+# rerun.txt
+# pickle-email-*.html
+# .project
+
+# Vim #
+#######
+# .*.s[a-w][a-z]
+# *.un~
+# Session.vim
+# .netrwhist
+# *~
+
+# Bittorrent Sync #
+###################
+# .sync
+
+# Emacs #
+###################
+# .smex-items
+# *~$
+# places
+# .recentf
+# ido.last
+# cider-history
+# projectile-bookmarks.eld
+# projectile.cache
+# auto-save-list
+# backups

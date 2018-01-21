@@ -1,0 +1,34 @@
+[include]
+  path = ~/.gitconfig.pers
+[filter "lfs"]
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
+[push]
+  default = simple
+[format]
+  pretty = %Cblue%h%Creset %Cgreen[%ar]%Creset (%an) %s
+[core]
+  excludesfile = ~/.gitignore_global
+  editor = nano
+  autocrlf = input
+[difftool "opendiff"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = /usr/bin/opendiff
+[color]
+  ui = true
+  diff = true
+[diff]
+  color = true
+[pager]
+  color = true
+[status]
+  color = true
+[alias]
+  st = status
+  co = checkout
+  b = branch
+  wdiff = diff --word-diff=color --unified=1
+  up = "!git remote update -p; git merge --ff-only @{u}"
+[pull]
+  ff = only

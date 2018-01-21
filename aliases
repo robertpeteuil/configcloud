@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+
+#   ALIASES FILE
+#
+#     CLOUD Specific - LINUX ONLY VERSION
+#
+#     Robert Peteuil (c) 2018
+#
+
+export aliasfilename=".aliases"     # shellcheck disable=SC2034
+export aliasfilenum="2.0.0"        # shellcheck disable=SC2034
+export aliasfiledate="2018-01-21"   # shellcheck disable=SC2034
+
+###### DEFINES
+GIT_UPDATE=False
+CONFIGFILES_DIR=""
+
+###### VARS
+OS=$(uname -s)
+GIT_INST=$(git help)
+
+update-repos () {
+  GIT_INST=$(git help)
+  if [[ -e "$HOME/.configfiles/.git" ]] && [[ -n $GIT_INST ]]; then
+    echo -e "\n${GREEN}Updating .configfile repo...${WHITE}"
+    cd "$HOME/.configfiles"; git pull; cd ~
+    GIT_UPDATE=True
+  fi
+}
+
+# set package manager var
+if $(apt -h &> /dev/null); then
+  pkg_cmd="apt"
+elif $(apt-get &> /dev/null); then
+  pkg_cmd="apt-get"
+elif $(yum -h &> /dev/null); then
+  pkg_cmd="yum"
+fi
+
+update-all() {
+  if [[ "$pkg_cmd" == apt* ]]; then
+    echo -e "${GREEN}Updating via ${pkg_cmd}...${WHITE}"
+    sudo ${pkg_cmd} update -qq -y
+    echo -e "${GREEN}upgrading via ${pkg_cmd}...${WHITE}"
+    sudo ${pkg_cmd} upgrade -y
+    if [[ "$1" == "clean" ]]; then
+      echo -e "${GREEN}Autoclean & Autoremove...${WHITE}"
+      sudo apt-get autoclean -qq
+      sudo apt-get autoremove -qq
+    fi
+  elif [[ "$pkg_cmd" == "yum" ]]; then
+    echo -e "${GREEN}Updating via ${pkg_cmd}...${WHITE}"
+    sudo yum update -y
+    if [[ "$1" == "clean" ]]; then
+      yum clean expire-cache
+    fi
+  else
+    echo -e "${RED}Unknown Package Manager - Packages not updated${WHITE}"
+  fi
+  if [[ $GIT_UPDATE ]]; then
+    update-repos
+  fi
+}
+
+#### LS ALIASES - made from sub-strings set in OS specific section (above)
+  # ls - normal with colors, symbols and readable numbers
+  alias ls="ls --color -Fh"
+  # ls - all files
+  alias lsa="ls -laFhv --color --group-directories-first"
+  alias ll='lsa'
+  # ls - hidden files
+  alias lsh="ls -laFhdv --color --group-directories-first .*"
+  # ls - directories
+  alias lsd="ls --color -laFh | grep --color=never '^d'"
+  alias lld='lsd'
+
+#### DIR NAVIGATION
+  alias ..='cd ..'
+  alias ...='cd ../../'
+  alias ....='cd ../../../'
+  if [ -d "${HOME}/Versioned" ] ; then
+    # shellcheck disable=SC2139
+    alias cd2v="cd ${HOME}/Versioned"
+  fi
+  if [ -d "${HOME}/.configfiles" ] ; then
+    # shellcheck disable=SC2139
+    alias cd2cf="cd ${HOME}/.configfiles"
+  fi
+
+#### DOCKER
+  alias d='docker'
+  alias d-c='docker-compose'
+  # alias drms='docker rm $(docker ps -a -q | grep -v $(docker ps -q))'
+  alias drmsc='docker rm $(docker ps -q -f 'status=exited')'
+  alias drmsi='docker rmi $(docker images -q -f "dangling=true")'
+  alias drmsv='docker volume prune -f'
+  alias drmsall='drmsc; drmsi; drmsv'
+  alias dim='docker images'
+  alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+  alias dpss="docker ps --format 'table {{.Names}}\t{{.Status}}'"
+  alias dpsi="docker ps --format 'table {{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
+  alias dstat="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
+  alias dstats="docker stats --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
+  docker-ip() {
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$@"
+  }
+
+#### GIT
+  export GIT_MERGE_AUTOEDIT=no
+  alias g="git"
+  alias gs="git status"
+  alias gp="git pull"
+  alias gup="git up"
+  alias gpush="git push"
+  alias gcomb="git checkout master"
+  alias gcodb="git checkout develop"
+  alias ga="git add"
+  alias gcm="git commit -m"
+  alias gacm="git commit -a -m"
+  alias gremote='git remote get-url --all $(git remote)'
+  # alias grpl="git reset HEAD --hard; git pull"
+  alias glog='git log --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset" --date=format:"%m-%d-%Y %H:%M" --abbrev-commit'
+
+#### NETWORK
+  # LOCAL IP ADDRESS
+  alias ifconfig-lan='ifconfig | grep "inet addr:" | grep -v "127.0.0.1" | cut -d: -f2 | cut -d" " -f 1'
+  alias ifconfig-local='ifconfig-lan'
+  alias ifconfig-private='ifconfig-lan'
+  # IP ADDRESS - PUBLIC INTERNET
+  alias ifconfig-ext='curl -s ipinfo.io/ip'
+  alias ifconfig-pub='ifconfig-ext'
+  alias ifconfig-public='ifconfig-ext'
+  # SHOW ALL ACTIVE ETHNET CARDS & IP ADDRESS INFO
+  alias ifconfig-active="ifconfig -a | grep 'eth0' -A 6; ifconfig -a | grep 'wlan0' -A 6"
+  # NETSTAT
+  alias ifconfig-ports='netstat -ntlp | grep LISTEN'
+  # alias ip='ip -c'  # breaks some utilities
+
+#### DISK / MEMORY USAGE
+  # TOP TEN LARGEST FILES IN CURRENT DIRECTORY
+  alias ls-big='ls -1Rhs | sed -e "s/^ *//" | grep "^[0-9]" | sort -hr | head -n20'
+  # TOP TEN LARGEST FILES OR DIRECTORIES IN CURRENT DIR
+  alias big='du -ah . | sort -rh | head -20'
+  # TOP MEMORY USE PROCESSES
+  alias psmem='ps -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 6 | tail -15'
+
+#### FILE OPERATIONS
+  # TAKE FILE OWNERSHIP
+  alias mychown='chown $(id -u):$(id -g)'
+  # DISPLAY OCTAL FILE PERMISSIONS
+  alias octalmode='stat -c "%a %n" '
+  alias getoctal='octalmode'
+  # MAKE DIR ANYWHERE AND TAKE OWNERSHIP
+  mkdirsys() {
+    if [[ "$2" ]]; then
+      grpOwner="$2"
+    else
+      grpOwner="$USER"
+    fi
+    sudo mkdir -p "$1"
+    sudo chown ${USER:=$(/usr/bin/id -run)}:$grpOwner $1
+    sudo chmod g+srwx "$1"
+  }
+
+#### GENERAL ALISES
+  # ENABLE SUDOING ALIASES
+  alias sudo='sudo '
+  # RELOAD SHELL (i.e. invoke as a login shell)
+  alias reload="exec $SHELL -l"
+  # OUTPUT CLARIFIERS
+  alias mv='mv -v'
+  alias rm='rm -v'
+  alias ln='ln -v'
+  alias mkdir='mkdir -p'
+  alias df='df -h'
+  alias ln='ln -v'
+
+#### HOST SETUP AND CONFIG
+  # SET TIMEZONE
+  alias settimezone="sudo dpkg-reconfigure tzdata"
+  # MAKE SSH KEY
+  alias make-key='ssh-keygen -t rsa -b 4096'
+  # SEND SSH KEY
+  send-key-to-host() {
+    if [ "$1" == "-h" ]; then
+      echo -e "usage:  send-key-to-host REMOTESERVER"
+      echo -e "\n\t REMOTESERVER supports 'user@host' or 'HOST'"
+      echo -e "\t depending on username in use on local/remot HOST"
+      return
+    fi
+    cat ~/.ssh/id_rsa.pub | ssh "$1" "mkdir -p ~/.ssh; cat >>  ~/.ssh/authorized_keys"
+  }
+  # INSTALL SYSIS
+  alias install-sysis='bash -c "`curl -s -L https://raw.github.com/robertpeteuil/sysis/master/install.sh`"'
+  # INSTALL PIP
+  install-pip() {
+    curl -s https://bootstrap.pypa.io/get-pip.py > get-pip.py
+    chmod +x get-pip.py
+    sudo -H python get-pip.py
+  }
+
+#### COLORIZATION
+  # COLOR DIR / VDIR
+  if $(dir --color &> /dev/null); then    # part of coreutils
+    alias dir='dir --color'
+  else
+    alias dir='dir -G'
+  fi
+  if $(vdir --color &> /dev/null); then   # part of coreutils
+    alias vdir='vdir --color'
+  else
+    alias vdir='vdir -G'
+  fi
+  # COLOR GREP
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+  # GRC COLORIZATION OF OTHER UTILS
+  GRC=$(which grc 2>/dev/null)
+  if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
+    alias colorify="$GRC -es --colour=auto"
+    alias configure='colorify ./configure'
+    alias diff='colorify diff'
+    alias make='colorify make'
+    alias gcc='colorify gcc'
+    alias g++='colorify g++'
+    alias as='colorify as'
+    alias gas='colorify gas'
+    alias ld='colorify ld'
+    alias netstat='colorify netstat'
+    alias ping='colorify ping'
+    alias traceroute='colorify /usr/sbin/traceroute'
+    alias arp='colorify -c conf.traceroute arp'
+    alias tail='colorify -c conf.log tail'
+    alias ps='colorify -c conf.ps ps'
+    alias ifconfig='colorify -c conf.ifconfig ifconfig'
+    alias nmap='colorify -c conf.nmap nmap'
+    alias lsof='colorify -c conf.lsof lsof'
+    alias dig='colorify -c conf.traceroute dig'
+    alias host='colorify -c conf.traceroute host'
+    alias curl='colorify -c conf.curl curl'
+  fi

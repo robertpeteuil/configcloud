@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+#   CLOUDRC-REMOTE - enabled cloud SDKs and aliases
+#
+#     CLOUD Specific - LINUX ONLY VERSION
+#
+#     Robert Peteuil (c) 2018
+
+export cloudrcname=".cloudrc-remote"  # shellcheck disable=SC2034
+export cloudrcnum="2.0.0"             # shellcheck disable=SC2034
+export cloudrcdate="2018-01-21"       # shellcheck disable=SC2034
+
+###### VARS
+GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
+
+###### FUNCTIONS
+sourceIf () {
+  if [ -e "$1" ]; then
+    . "$1"
+  fi
+}
+
+##### UNIQUE FUNCTION VERSION FOR CLOUDRC-REMOTE
+# GET-GCP-TOKEN - ON GCP HOST
+get-gcp-token () {
+  curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" \
+-H "Metadata-Flavor: Google"
+}
+# DOCKER-LOGIN-GCP - ON GCP HOST
+docker-login-gcp () {
+  docker login -u oauth2accesstoken -p "$(curl -s 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token' \
+-H 'Metadata-Flavor: Google')" https://gcr.io
+}
+
+##### LOAD CONFIG INFO PRESENT
+sourceIf "$HOME/.cloud/.cloud_config"
+
+##### SOURCE CLOUD SDKs
+# AWS
+if [ -x /usr/local/bin/aws ]; then
+  complete -C aws_completer aws
+fi
+# AZURE
+sourceIf "$HOME/lib/azure-cli/az.completion"
+sourceIf "/usr/local/bin/az.completion.sh"
+# GCLOUD
+sourceIf "$HOME/google-cloud-sdk/path.bash.inc"
+sourceIf "$HOME/google-cloud-sdk/completion.bash.inc"
+
+##### PROVIDER SPECIFIC ALIASES
+## AWS
+if [[ -n "$AWS_ACCESS_KEY_ID" ]]; then
+  # LIST INSTANCES
+  alias aws-list="aws ec2 describe-instances --query 'Reservations[].Instances[].[Tags[?Key==\`Name\`].Value|[0],Placement.AvailabilityZone,InstanceType,PublicIpAddress,State.Name,InstanceLifecycle]' --output table"
+  # MOBILE FORMATTED LIST OF INSTANCES
+  alias aws-list-m="aws ec2 describe-instances --query 'Reservations[].Instances[].[Tags[?Key==\`Name\`].Value|[0],PublicIpAddress,State.Name]' --output table"
+  # LIST RUNNING INSTANCES
+  alias aws-list-r="aws ec2 describe-instances --filters 'Name=instance-state-name,Values=running' --query 'Reservations[].Instances[].[Tags[?Key==\`Name\`].Value|[0],Placement.AvailabilityZone,InstanceType,PrivateIpAddress,PublicIpAddress,InstanceLifecycle]' --output table"
+fi
+
+## GCLOUD
+# PUSH TO GCP IMAGE REPO
+dpush-gcp () {
+  [[ -z "$1" ]] && echo "specify \$1 as image name to push" && exit 1
+  [[ -z "$GCP_PROJ" ]] && echo "current gcloud project not set, exiting..." && exit 1
+  docker tag $1 "gcr.io/${GCP_PROJ}/$1"
+  docker push "gcr.io/${GCP_PROJ}/$1"
+  docker rmi "gcr.io/${GCP_PROJ}/$1"
+}
+# NOTE 09-01-17: GCLOUD COMMAND FORMAT CHANGED AFTER ALIAS CREATION - still work but depricated
+if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
+  alias gcd='gcloud docker'
+  # LIST INSTANCES
+  alias gcp-list="gcloud compute instances list --format='table[box](name:sort=1, zone, machine_type, networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
+  # MOBILE FORMATTED LIST OF INSTANCES
+  alias gcp-list-m="gcloud compute instances list --format='table[box](name:sort=1, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
+  # LIST RUNNING INSTANCES
+  alias gcp-list-r="gcloud compute instances list --filter STATUS=RUNNING --format='table[box](name:sort=1, zone, machine_type, networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP)'"
+  gcp-start() {
+    if [[ -n "$1" ]] && [[ -n "$2" ]]; then
+      gcloud compute instances start "$1" --zone="$2"
+    else
+      echo "Two Params Required:"
+      echo -e "\t \$1 = NAME, \$2 = ZONE"
+    fi
+  }
+  gcp-stop() {
+    if [[ -n "$1" ]] && [[ -n "$2" ]]; then
+      gcloud compute instances stop "$1" --zone="$2"
+    else
+      echo "Two Params Required:"
+      echo -e "\t \$1 = NAME, \$2 = ZONE"
+    fi
+  }
+  gcp-ssh() {
+    if [[ -n "$1" ]] && [[ -n "$2" ]]; then
+      gcloud compute ssh "$1" --zone="$2" --ssh-key-file="~/.ssh/id_rsa" -- -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+    else
+      echo "Two Params Required:"
+      echo -e "\t \$1 = NAME, \$2 = ZONE"
+    fi
+  }
+fi
+
+##### AZ
+if [[ -n "$AZURE_TENANT_ID" ]]; then
+  # LIST INSTANCES
+  azure-list() {
+    az vm list -d --query "[].{ name: name, ResourceGroup: resourceGroup, MachineType: hardwareProfile.vmSize, FQDNS: fqdns, State: powerState}" -o=table
+  }
+  alias az-list='azure-list'
+  # MOBILE FORMATTED LIST INSTANCES - NAME, GROUP, STATE
+  azure-list-m() {
+    az vm list -d --query "[].{ name: name, ResourceGroup: resourceGroup, State: powerState}" -o=table
+  }
+  alias az-list-m='azure-list-m'
+  # MOBILE FORMATTED LIST INSTANCES - NAME & FQDN
+  azure-list-m2() {
+    az vm list -d --query "[].{ name: name, FQDNS: fqdns}" -o=table
+  }
+  alias az-list-m2='azure-list-m2'
+  # LIST INSTANCES WITH LOCATION
+  azure-list-loc() {
+    az vm list -d --query "[].{ name: name, ResourceGroup: resourceGroup, Location: location, FQDNS: fqdns, State: powerState}" -o=table
+  }
+  alias az-list-loc='azure-list-loc'
+  # LIST RUNNING INSTANCES
+  azure-list-r() {
+    az vm list -d --query "[?contains(powerState,'running')].{ name: name, ResourceGroup: resourceGroup, MachineType: hardwareProfile.vmSize, FQDNS: fqdns, PublicIP: publicIps}" -o=table
+  }
+  alias az-list-r='azure-list-r'
+  # START INSTANCE
+  az-start() {
+    if [[ -z "$2" ]] && [[ -n "$1" ]]; then
+      az vm start --ids $(az vm list -g "$1" --query "[].id" -o tsv)
+    elif [[ -n "$1" ]]; then
+      az vm start -n "$1" -g "$2"
+    else
+      echo "One or Two Params Required:"
+      echo -e "\t \$1 = GROUP"
+      echo -e "\t \$1 = NAME, \$2 = GROUP"
+    fi
+  }
+  # STOP INSTANCE
+  az-stop() {
+    if [[ -z "$2" ]] && [[ -n "$1" ]]; then
+      az vm deallocate --ids $(az vm list -g "$1" --query "[].id" -o tsv) --no-wait
+    elif [[ -n "$1" ]]; then
+      az vm deallocate -n "$1" -g "$2"
+    else
+      echo "One or Two Params Required:"
+      echo -e "\t \$1 = GROUP"
+      echo -e "\t \$1 = NAME, \$2 = GROUP"
+    fi
+  }
+fi

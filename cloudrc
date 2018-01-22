@@ -47,7 +47,7 @@ docker-login-gcp () {
     echo -n "no token or key - "
     GCP_DOCKER_LOGIN="failed"
   fi
-  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && exit 1
+  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && return 1
 }
 
 
@@ -79,9 +79,9 @@ fi
 ## GCLOUD
 # PUSH TO GCP IMAGE REPO
 dpush-gcp () {
-  [[ -z "$1" ]] && echo "specify \$1 as image name to push" && exit 1
-  [[ -z "$GCP_PROJ" ]] && echo "gcloud project not set, exiting..." && exit 1
-  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && exit 1
+  [[ -z "$1" ]] && echo "specify \$1 as image name to push" && return 1
+  [[ -z "$GCP_PROJ" ]] && echo "gcloud project not set, exiting..." && return 1
+  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && return 1
   [[ "$GCP_DOCKER_LOGIN" != "success" ]] && docker-login-gcp
   if [[ "$GCP_DOCKER_LOGIN" == "success" ]]; then
     docker tag $1 "gcr.io/${GCP_PROJ}/$1"

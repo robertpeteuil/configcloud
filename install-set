@@ -19,7 +19,7 @@
 #   This default settings file ignores these items:
 #     Installer-related files: scripts directory, this settings file
 #     Other info-files: Icon file(s), .sh scripts, .md & .txt files
-ignore='zref* install* Icon* *.md *.txt'
+ignore='zref* install* Icon* *.md *.txt LICENSE'
 
 # LINK DIR CONTENTS - MAKE DIR IF NECESSARY
 #   Will NOT delete n existing directory, but will still place links in it

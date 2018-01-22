@@ -9,7 +9,7 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.2"
+aliasfilenum="2.0.3"
 aliasfiledate="2018-01-22"
 
 
@@ -101,6 +101,12 @@ update-all() {
   }
 
 #### GIT
+  if $(git --version 2&> /dev/null); then
+    # add gitconfig shortcut 'gh' for https://github.com/ - ex: "git clone gh:USER/REPO"
+    git config -f ~/.gitconfig_custom --replace-all url.https://github.com/.insteadof gh:
+    # add gitconfig shortcut 'my' for https://github.com/$USER - ex: "git clone my:REPONAME"
+    git config -f ~/.gitconfig_custom --replace-all url.https://github.com/$USER/.insteadof my:
+  fi
   export GIT_MERGE_AUTOEDIT=no
   alias g="git"
   alias gs="git status"

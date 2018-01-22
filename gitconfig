@@ -1,5 +1,6 @@
 [include]
   path = ~/.gitconfig_pers
+  path = ~/.gitconfig_custom
 [filter "lfs"]
   clean = git-lfs clean %f
   smudge = git-lfs smudge %f

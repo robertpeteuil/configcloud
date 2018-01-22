@@ -27,10 +27,10 @@ cd ~/.configcloud
 # Simulated Test-Installation & display details
 ./install.sh -t -d
 
-# Install & display details without overwriting existing files
+# Install without overwrite any existing files & display details
 ./install.sh -d
 
-# Install & display details, overright existing files (usually '.bash_profile' and '.bashrc')
+# Install with overwrite & display details
 ./install.sh -d -f 
 ```
 

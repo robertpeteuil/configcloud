@@ -8,9 +8,10 @@
 #     Robert Peteuil (c) 2018
 #
 
-aliasfilename=".aliases"     # shellcheck disable=SC2034
-aliasfilenum="2.0.1"         # shellcheck disable=SC2034
-aliasfiledate="2018-01-21"   # shellcheck disable=SC2034
+aliasfilename=".aliases"
+aliasfilenum="2.0.2"
+aliasfiledate="2018-01-22"
+
 
 ###### DEFINES
 GIT_UPDATE=False
@@ -28,7 +29,7 @@ update-repos () {
   fi
 }
 
-# set package manager var
+# SET PACKAGE MANAGER
 if $(apt -h &> /dev/null); then
   pkg_cmd="apt"
 elif $(apt-get &> /dev/null); then
@@ -62,15 +63,11 @@ update-all() {
   fi
 }
 
-#### LS ALIASES - made from sub-strings set in OS specific section (above)
-  # ls - normal with colors, symbols and readable numbers
+#### LS ALIASES
   alias ls="ls --color -Fh"
-  # ls - all files
   alias lsa="ls -laFhv --color --group-directories-first"
   alias ll='lsa'
-  # ls - hidden files
   alias lsh="ls -laFhdv --color --group-directories-first .*"
-  # ls - directories
   alias lsd="ls --color -laFh | grep --color=never '^d'"
   alias lld='lsd'
 
@@ -79,11 +76,9 @@ update-all() {
   alias ...='cd ../../'
   alias ....='cd ../../../'
   if [ -d "${HOME}/Versioned" ] ; then
-    # shellcheck disable=SC2139
     alias cd2v="cd ${HOME}/Versioned"
   fi
   if [ -d "${HOME}/.configcloud" ] ; then
-    # shellcheck disable=SC2139
     alias cd2cf="cd ${HOME}/.configcloud"
   fi
 
@@ -134,7 +129,6 @@ update-all() {
   alias ifconfig-active="ifconfig -a | grep 'eth0' -A 6; ifconfig -a | grep 'wlan0' -A 6"
   # NETSTAT
   alias ifconfig-ports='netstat -ntlp | grep LISTEN'
-  # alias ip='ip -c'  # breaks some utilities
 
 #### DISK / MEMORY USAGE
   # TOP TEN LARGEST FILES IN CURRENT DIRECTORY
@@ -165,7 +159,7 @@ update-all() {
 #### GENERAL ALISES
   # ENABLE SUDOING ALIASES
   alias sudo='sudo '
-  # RELOAD SHELL (i.e. invoke as a login shell)
+  # RELOAD SHELL (invoke as a login shell)
   alias reload="exec $SHELL -l"
   # OUTPUT CLARIFIERS
   alias mv='mv -v'
@@ -201,12 +195,12 @@ update-all() {
 
 #### COLORIZATION
   # COLOR DIR / VDIR
-  if $(dir --color &> /dev/null); then    # part of coreutils
+  if $(dir --color &> /dev/null); then 
     alias dir='dir --color'
   else
     alias dir='dir -G'
   fi
-  if $(vdir --color &> /dev/null); then   # part of coreutils
+  if $(vdir --color &> /dev/null); then
     alias vdir='vdir --color'
   else
     alias vdir='vdir -G'

@@ -6,10 +6,12 @@
 #       https://github.com/robertpeteuil/configcloud
 #
 #     Robert Peteuil (c) 2018
+#
 
-cloudrcname=".cloudrc-remote"  # shellcheck disable=SC2034
-cloudrcnum="2.0.1"             # shellcheck disable=SC2034
-cloudrcdate="2018-01-21"       # shellcheck disable=SC2034
+cloudrcname=".cloudrc-remote"
+cloudrcnum="2.0.2"
+cloudrcdate="2018-01-22"
+
 
 ###### VARS
 GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
@@ -36,17 +38,19 @@ docker-login-gcp () {
 ##### LOAD CONFIG INFO PRESENT
 sourceIf "$HOME/.cloud/.cloud_config"
 
+
 ##### SOURCE CLOUD SDKs
-# AWS
+## AWS
 if [ -x /usr/local/bin/aws ]; then
   complete -C aws_completer aws
 fi
-# AZURE
+## AZURE
 sourceIf "$HOME/lib/azure-cli/az.completion"
 sourceIf "/usr/local/bin/az.completion.sh"
-# GCLOUD
+## GCLOUD
 sourceIf "$HOME/google-cloud-sdk/path.bash.inc"
 sourceIf "$HOME/google-cloud-sdk/completion.bash.inc"
+
 
 ##### PROVIDER SPECIFIC ALIASES
 ## AWS
@@ -103,7 +107,7 @@ if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
   }
 fi
 
-##### AZ
+## Azure
 if [[ -n "$AZURE_TENANT_ID" ]]; then
   # LIST INSTANCES
   azure-list() {

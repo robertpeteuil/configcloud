@@ -12,16 +12,18 @@
 #
 
 scriptname="install.sh"
-scriptbuildnum="2.0.1"
-scriptbuilddate="2018-01-21"
+scriptbuildnum="2.0.2"
+scriptbuilddate="2018-01-22"
+
 
 ################################################################
-### VARS INITS
-os=$(uname | tr '[:upper:]' '[:lower:]')  # get OS name in all lowercase
-settingsfilename="install-set"
+### VARIABLE INITS
+
+os=$(uname | tr '[:upper:]' '[:lower:]')
+settingsfilename="install_set"
 logfilename="LOG-install.txt"
 
-# INITIALIZE MODE FLAGS
+# MODE FLAGS
 customconfig=false
 forcemode=false
 testmode=false
@@ -32,12 +34,12 @@ test_overwrite_flag=false
 overwrite_flag=false
 copy_recursion=false
 
-# SET STRING FLAGS
+# STRING FLAGS
 temp_src=""
 remove_item_type=""
-report_indent="    " # set indent as (tab) may not be supported
+report_indent="    "
 
-# COUNTERS (set to be seen as integers in some shells)
+# COUNTERS
 test_copies=0
 test_links=0
 test_removing=0
@@ -54,7 +56,7 @@ error_mkdirs=0
 warning_skipped=0
 warning_removals=0
 
-# Reporting Strings
+# REPORT STRINGS
 test_copies_names=""
 test_links_names=""
 test_removing_names=""
@@ -71,14 +73,15 @@ error_mkdirs_names=""
 warning_skipped_names=""
 warning_removals_names=""
 
+
 ############################################################
 ###     PRE-EXECUTION
 
-# TURN ON COLOR IF POSSIBLE, SET THEME
-if test -t 1; then            # check if stdout is a terminal
-  ncolors=$(tput colors)    # see if it supports colors
+# ENABLE COLOR IF SUPPORTED AND SET THEME COLORS
+if test -t 1; then 
+  ncolors=$(tput colors)
   if test -n "$ncolors" && test "$ncolors" -ge 8; then
-  # SET COLORS
+  # SET TEMP COLOR VARS
     bold="$(tput bold)"
     underline="$(tput smul)"
     standout="$(tput smso)"
@@ -91,7 +94,7 @@ if test -t 1; then            # check if stdout is a terminal
     magenta="$(tput setaf 5)"
     cyan="$(tput setaf 6)"
     white="$(tput setaf 7)"
-  # SET COLOR THEME - vars used by echo statements
+  # SET COLOR THEME USED IN ECHO STATEMENTS
     CLRnormal=${bold}${white}
     CLRheading=${bold}${green}
     CLRheading2=${bold}${blue}
@@ -470,9 +473,9 @@ report_data () {
 
 
 ################################################################
-### EXECUTION - Setup
+### PRE-EXECUTION
 
-# Parse COMMAND-TAIL Arguments
+# PARSE COMMAND-TAIL ARGUMENTS
 for arg in "$@"; do
   case "$arg" in
     -f|--force)         forcemode=true; shift ;;
@@ -486,27 +489,27 @@ for arg in "$@"; do
   esac
 done
 
-# Set default dirs (must occur after command-tail parsing)
+# SET DEFAULT DIRS (MUST OCCUR AFTER COMMAND-TAIL PARSING)
 source_dir="${1:-$(pwd)}"
 dest_dir="${2:-$HOME}"
 
-# Read Settings File (must occur after command-tail parsing)
-settingsfile="${source_dir}/${settingsfilename}"  # General Settings File
-settingsfileOS="${settingsfile}-${os}"            # Specific OS Settings File
+# READ SETTINGS FILE (MUST OCCUR AFTER COMMAND-TAIL PARSING)
+settingsfile="${source_dir}/${settingsfilename}"
+settingsfileOS="${settingsfile}-${os}"
 
-if [ "$customconfig" = false ]; then  # custom settings not loaded
-  if [ -f "${settingsfileOS}" ]; then # use OS-Specific
+if [ "$customconfig" = false ]; then
+  if [ -f "${settingsfileOS}" ]; then
     . "${settingsfileOS}" 2>/dev/null
     [[ "$?" != 0 ]] && processAbort "Cannot read ${settingsfileOS}"
-  elif [ -f "${settingsfile}" ]; then # else use default
+  elif [ -f "${settingsfile}" ]; then
     . "${settingsfile}" 2>/dev/null
     [[ "$?" != 0 ]] && processAbort "Cannot read ${settingsfile}"
-  else  # ERROR - no settings file found
+  else
     processAbort "No settings file found"
   fi
 fi
 
-# Config file glob expansion
+# CONFIG FILE GLOB EXPANSION
 link_sources="${link}"
 ignore_sources="${ignore}"
 copy_sources="${copy}"
@@ -533,7 +536,7 @@ fi
 
 
 ################################################################
-### EXECUTION - Make Links & Copy Files
+### EXECUTION
 
 # OUTPUT EXECUTION TYPE
 if [ "$testmode" = true ]; then
@@ -581,33 +584,34 @@ for s in $copy_sources; do
 done
 
 # LINK CHILDREN (WITH RECURSION) AND MKDIR IF NEEDED
-#   manually perform recursive functions for 
-#     1st and 2nd levels to get error info & count
+#   manually perform recursive functions 
+#     for 1st and 2nd levels to get error info & count
 for s in $link_children_sources; do
   if [ ! -e "$s" ]; then
     continue 
   fi
   target="$dest_dir/.$s"
   children=$(echo $s/*)
-  # WILL NOT delete an existing DIR
-  #   if TARGET exists as a DIR - make links in it
-  #   if TARGET doesnt exist, create it - then make links in it
-  #   if TARGET exists but not a DIR -
-  #       log error, attempt link creation to generate logging info
-  #       these failures will not be revealed during test-mode
+  # WILL NOT delete an existing DIR, if TARGET:
+  #   'exists as a DIR' - make links in it
+  #   'doesnt exist' - create it, then make links in it
+  #   'exists but not a DIR':
+  #       log error, generate log of failures by attempting link creation
+  #       note: failures not discoverable in test-mode
   if [ ! -e "$target" ]; then
     make_dir "$target"
-  elif  [ ! -d "$target" ]; then  # $target' exists but is NOT a Dir
+  elif  [ ! -d "$target" ]; then
     prefail=true
     script_error_message="$script_error_message \tLink_Children Error: The item '$s' exists and is NOT a directory.\n\tAttempts to create links in it will fail until it is removed or renamed.\n"
   fi
-  for t in $children; do    # MAKE LINKS FOR THE DIR CONTENTS
+  for t in $children; do
     make_links "$t"
   done
   prefail=false
 done
 
-[ "$quietmode" = true ] && processExit # if in quiet mode - bail without report
+[ "$quietmode" = true ] && processExit  # IF 'QUIET MODE' - EXIT WITHOUT REPORT
+
 
 ################################################################
 ###   REPORT (POST EXECUTION)
@@ -664,7 +668,6 @@ if [ "$errors_occured" = true ]; then
   [ "$error_removals" -gt "0" ] && report_data "error_removals"
 fi
 
-
 # ERROR DETAILS
 if [ -n "$script_error_message" ]; then
   echo "Error Details:"
@@ -673,5 +676,5 @@ fi
 
 processExit
 
-# this should never execute
+# THIS SHOULD NEVER EXECUTE
 exit 0

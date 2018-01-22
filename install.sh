@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 
 #   CONFIGCLOUD INSTALLER 
-#     CLOUD Specific - LINUX ONLY VERSION
 #
-#     Links or copies included files and dirs into the current user's home directory
-#       Must be ran from repo directory in the format: `./install.sh -d -t`
-#         Basic Parameters - additional params displayed in help (-h):
-#           -h = provides help
-#           -d = displays detailed results
-#           -t = test mode (no links/files created)
-#           -f = force overwrite of existing files (dirs will be merged)
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
+#
+#     This installer links or copies included files/dirs into the current user's home directory.
+#     It should be executed directly from the repo directory: ./install.sh -h (displays help)
 #
 #     Robert Peteuil (c) 2018
 #
 
 scriptname="install.sh"
-scriptbuildnum="2.0.0"
+scriptbuildnum="2.0.1"
 scriptbuilddate="2018-01-21"
 
 ################################################################

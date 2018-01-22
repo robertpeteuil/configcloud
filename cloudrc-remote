@@ -2,13 +2,14 @@
 
 #   CLOUDRC-REMOTE - enabled cloud SDKs and aliases
 #
-#     CLOUD Specific - LINUX ONLY VERSION
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
 #
 #     Robert Peteuil (c) 2018
 
-export cloudrcname=".cloudrc-remote"  # shellcheck disable=SC2034
-export cloudrcnum="2.0.0"             # shellcheck disable=SC2034
-export cloudrcdate="2018-01-21"       # shellcheck disable=SC2034
+cloudrcname=".cloudrc-remote"  # shellcheck disable=SC2034
+cloudrcnum="2.0.1"             # shellcheck disable=SC2034
+cloudrcdate="2018-01-21"       # shellcheck disable=SC2034
 
 ###### VARS
 GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')

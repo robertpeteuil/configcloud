@@ -1,29 +1,31 @@
 #!/bin/sh
 
-# SETTINGS FILE FOR INSTALL.SH
+# SETTINGS FILE FOR CONFIGCLOUD INSTALLER - defines items to ignore, link, copy, and create
 #
-# This file tells install.sh what to ignore, link, copy, and create
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
 #
-# There are four possible actions: ignore, link_children, copy, link
+#     Robert Peteuil (c) 2018
 #
-# Each action has a corresponding string
-#   These strings list files & globs for the action to be performed
-#     The items in each string are space separated
+#   There are four actions: ignore, link_children, copy, link
+#     Each action has a corresponding variable that list files and dirs (with wildcards)
+#     The items in each variable are space separated
 #
-# The actions are prioritized in the listed order, and as follows:
-#   IGNORE overrides LINK_CHILDREN
-#   LINK_CHILDREN overrides COPY
-#   COPY overrides LINK
+#   The actions are prioritized:
+#     IGNORE overrides LINK_CHILDREN
+#     LINK_CHILDREN overrides COPY
+#     COPY overrides LINK
 
-# IGNORE THESE FILES (DO NOT COPY OR LINK THEM TO USER'S HOME-dir)
-#   This default settings file ignores these items:
-#     Installer-related files: scripts directory, this settings file
-#     Other info-files: Icon file(s), .sh scripts, .md & .txt files
+
+# IGNORE THESE FILES (DO NOT COPY OR LINK THEM)
+#   The following wiles are ignored by default:
+#     Installer, this settings file, info-files,
+#     Icon file(s), .md & .txt files, and LICENSE
 ignore='zref* install* Icon* *.md *.txt LICENSE'
 
-# LINK DIR CONTENTS - MAKE DIR IF NECESSARY
-#   Will NOT delete n existing directory, but will still place links in it
-#   To replace a directory, manually delete it before running this script
+# LINK CONTENTS OF DIR - CREATE DIR IF NECESSARY
+#   Will NOT delete an existing directory, but will place links in it
+#   Replacing a directory requires manual deletion before running the Installer
 link_children=''
 
 # COPY THESE FILES

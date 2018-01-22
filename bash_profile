@@ -2,14 +2,15 @@
 
 #   BASH Profile
 #
-#     CLOUD Specific - LINUX ONLY VERSION
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
 #
 #     Robert Peteuil (c) 2018
 #
 
-export profilename=".bash_profile"   # shellcheck disable=SC2034
-export profilenum="2.0.0"            # shellcheck disable=SC2034
-export profiledate="2018-01-21"      # shellcheck disable=SC2034
+profilename=".bash_profile"   # shellcheck disable=SC2034
+profilenum="2.0.1"            # shellcheck disable=SC2034
+profiledate="2018-01-21"      # shellcheck disable=SC2034
 
 if [ -f ~/.bashrc ]; then
   . ~/.bashrc

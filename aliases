@@ -2,14 +2,15 @@
 
 #   ALIASES FILE
 #
-#     CLOUD Specific - LINUX ONLY VERSION
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
 #
 #     Robert Peteuil (c) 2018
 #
 
-export aliasfilename=".aliases"     # shellcheck disable=SC2034
-export aliasfilenum="2.0.1"         # shellcheck disable=SC2034
-export aliasfiledate="2018-01-21"   # shellcheck disable=SC2034
+aliasfilename=".aliases"     # shellcheck disable=SC2034
+aliasfilenum="2.0.1"         # shellcheck disable=SC2034
+aliasfiledate="2018-01-21"   # shellcheck disable=SC2034
 
 ###### DEFINES
 GIT_UPDATE=False

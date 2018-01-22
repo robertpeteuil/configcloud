@@ -2,14 +2,15 @@
 
 #   BASHRC - Bash Settings, Prompt Cust, Config Settings and Sources Additional Files  
 #
-#     CLOUD Specific - LINUX ONLY VERSION
+#     This script is a component of ConfigCloud
+#       https://github.com/robertpeteuil/configcloud
 #
 #     Robert Peteuil (c) 2018
 #
 
-export bashconfigname=".bashrc"
-export bashconfignum="2.0.0"
-export bashconfigdate="2018-01-21"
+bashconfigname=".bashrc"
+bashconfignum="2.0.1"
+bashconfigdate="2018-01-21"
 
 # If not running interactively, don't do anything
 case $- in

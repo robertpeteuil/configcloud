@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#   CLOUDRC-REMOTE - enabled cloud SDKs and aliases
+#   CLOUDRC - enabled cloud SDKs and aliases
 #
 #     This script is a component of ConfigCloud
 #       https://github.com/robertpeteuil/configcloud
@@ -8,13 +8,19 @@
 #     Robert Peteuil (c) 2018
 #
 
-cloudrcname=".cloudrc-remote"
-cloudrcnum="2.0.2"
+cloudrcname=".cloudrc"
+cloudrcnum="2.1.0"
 cloudrcdate="2018-01-22"
 
 
+##### LOAD CONFIG INFO PRESENT
+sourceIf "$HOME/.cloud/.cloud_config"
+
 ###### VARS
+GCP_DOCKER_LOGIN=""
 GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
+
+
 
 ###### FUNCTIONS
 sourceIf () {
@@ -22,21 +28,27 @@ sourceIf () {
     . "$1"
   fi
 }
-
-##### UNIQUE FUNCTION VERSION FOR CLOUDRC-REMOTE
-# GET-GCP-TOKEN - ON GCP HOST
+# GET-GCP-TOKEN
 get-gcp-token () {
-  curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" \
--H "Metadata-Flavor: Google"
+  GCP_TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google")
 }
-# DOCKER-LOGIN-GCP - ON GCP HOST
+# DOCKER-LOGIN-GCP
 docker-login-gcp () {
-  docker login -u oauth2accesstoken -p "$(curl -s 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token' \
--H 'Metadata-Flavor: Google')" https://gcr.io
+  get-gcp-token
+  if [[ "$GCP_TOKEN" =~ access_token ]]; then
+    echo "gcp-based host - using token login"
+    docker login -u oauth2accesstoken -p "$GCP_TOKEN" https://gcr.io
+    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
+  elif [[ -n "${GCP_JSON}" ]]; then
+    echo "using key based login"
+    docker login -u _json_key -p "$(cat $GCP_JSON)" https://gcr.io
+    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
+  else
+    echo -n "no token or key - "
+    GCP_DOCKER_LOGIN="failed"
+  fi
+  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && exit 1
 }
-
-##### LOAD CONFIG INFO PRESENT
-sourceIf "$HOME/.cloud/.cloud_config"
 
 
 ##### SOURCE CLOUD SDKs
@@ -50,6 +62,7 @@ sourceIf "/usr/local/bin/az.completion.sh"
 ## GCLOUD
 sourceIf "$HOME/google-cloud-sdk/path.bash.inc"
 sourceIf "$HOME/google-cloud-sdk/completion.bash.inc"
+sourceIf "/usr/lib/google-cloud-sdk/completion.bash.inc"
 
 
 ##### PROVIDER SPECIFIC ALIASES
@@ -67,20 +80,23 @@ fi
 # PUSH TO GCP IMAGE REPO
 dpush-gcp () {
   [[ -z "$1" ]] && echo "specify \$1 as image name to push" && exit 1
-  [[ -z "$GCP_PROJ" ]] && echo "current gcloud project not set, exiting..." && exit 1
-  docker tag $1 "gcr.io/${GCP_PROJ}/$1"
-  docker push "gcr.io/${GCP_PROJ}/$1"
-  docker rmi "gcr.io/${GCP_PROJ}/$1"
+  [[ -z "$GCP_PROJ" ]] && echo "gcloud project not set, exiting..." && exit 1
+  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && exit 1
+  [[ "$GCP_DOCKER_LOGIN" != "success" ]] && docker-login-gcp
+  if [[ "$GCP_DOCKER_LOGIN" == "success" ]]; then
+    docker tag $1 "gcr.io/${GCP_PROJ}/$1"
+    docker push "gcr.io/${GCP_PROJ}/$1"
+    docker rmi "gcr.io/${GCP_PROJ}/$1"
+  fi
 }
-# NOTE 09-01-17: GCLOUD COMMAND FORMAT CHANGED AFTER ALIAS CREATION - still work but depricated
 if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
   alias gcd='gcloud docker'
   # LIST INSTANCES
-  alias gcp-list="gcloud compute instances list --format='table[box](name:sort=1, zone, machine_type, networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
+  alias gcp-list="gcloud compute instances list --format='table(name:sort=1, zone, machineType.machine_type().basename(), networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
   # MOBILE FORMATTED LIST OF INSTANCES
-  alias gcp-list-m="gcloud compute instances list --format='table[box](name:sort=1, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
+  alias gcp-lists="gcloud compute instances list --format='table(name:sort=1, zone, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
   # LIST RUNNING INSTANCES
-  alias gcp-list-r="gcloud compute instances list --filter STATUS=RUNNING --format='table[box](name:sort=1, zone, machine_type, networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP)'"
+  alias gcp-listrun="gcloud compute instances list --filter STATUS=RUNNING --format='table(name:sort=1, zone, machineType.machine_type().basename(), networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP)'"
   gcp-start() {
     if [[ -n "$1" ]] && [[ -n "$2" ]]; then
       gcloud compute instances start "$1" --zone="$2"
@@ -107,7 +123,7 @@ if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
   }
 fi
 
-## Azure
+## AZURE
 if [[ -n "$AZURE_TENANT_ID" ]]; then
   # LIST INSTANCES
   azure-list() {

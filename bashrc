@@ -9,7 +9,7 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.2"
+bashconfignum="2.0.3"
 bashconfigdate="2018-01-22"
 
 
@@ -18,6 +18,12 @@ case $- in
     *i*) ;;
       *) return;;
 esac
+
+###### BAIL IF NOT RUNNING BASH
+if [ -z "$BASH_VERSION" ]; then
+  export PATH
+  return &> /dev/null || exit
+fi
 
 ###### DEFINES
 prompt_style="GIT"  # 2-line prompt, displays info for repo dirs 
@@ -29,11 +35,6 @@ DEMOHOST="cloudhost"
 ###### VARS
 OS=$(uname -s)
 
-###### BAIL IF NOT RUNNING BASH
-if [ -z "$BASH_VERSION" ]; then
-  export PATH
-  return &> /dev/null || exit
-fi
 
 ###### FUNCTIONS
 ver_configfiles() {
@@ -43,13 +44,11 @@ ver_configfiles() {
   [[ -n $cloudrcname ]] && echo "${cloudrcname} v${cloudrcnum} - ${cloudrcdate}"
   return 0
 }
-
 sourceIf () {
   if [ -e "$1" ]; then
     . "$1"
   fi
 }
-
 pathIf () {
   if [ -d "$1" ] && [[ $PATH != *"$1"* ]]; then
     PATH="$PATH:$1"
@@ -181,5 +180,5 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 unset color_enabled
 
 ###### SOURCE FILES
-sourceIf "$HOME/.cloudrc_remote"
+sourceIf "$HOME/.cloudrc"
 sourceIf "$HOME/.aliases"

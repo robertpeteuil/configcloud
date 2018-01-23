@@ -9,19 +9,25 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.3"
+aliasfilenum="2.0.4"
 aliasfiledate="2018-01-22"
 
 
-###### DEFINES
-GIT_UPDATE=False
-
-###### VARS
+#### VARS
 OS=$(uname -s)
-GIT_INST=$(git help)
+
+#### FUNCTIONS
+check-git-installed () {
+  if $(git --version 2&> /dev/null); then
+    GIT_INST=1
+  else
+    unset GIT_INST
+  fi
+  echo -n "$GIT_INST"
+}
 
 update-repos () {
-  GIT_INST=$(git help)
+  GIT_INST=$(check-git-installed)
   if [[ -e "$HOME/.configcloud/.git" ]] && [[ -n $GIT_INST ]]; then
     echo -e "\n${GREEN}Updating .configcloud repo...${WHITE}"
     cd "$HOME/.configcloud"; git pull; cd ~
@@ -29,7 +35,11 @@ update-repos () {
   fi
 }
 
-# SET PACKAGE MANAGER
+#### SET VARS
+GIT_UPDATE=False
+GIT_INST=$(check-git-installed)
+
+#### SET PACKAGE MANAGER
 if $(apt -h &> /dev/null); then
   pkg_cmd="apt"
 elif $(apt-get &> /dev/null); then
@@ -101,7 +111,7 @@ update-all() {
   }
 
 #### GIT
-  if $(git --version 2&> /dev/null); then
+  if [[ -n $GIT_INST ]]; then
     # add gitconfig shortcut 'gh' for https://github.com/ - ex: "git clone gh:USER/REPO"
     git config -f ~/.gitconfig_custom --replace-all url.https://github.com/.insteadof gh:
     # add gitconfig shortcut 'my' for https://github.com/$USER - ex: "git clone my:REPONAME"

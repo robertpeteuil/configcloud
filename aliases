@@ -9,7 +9,7 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.5"
+aliasfilenum="2.0.6"
 aliasfiledate="2018-01-25"
 
 
@@ -135,6 +135,19 @@ update-all() {
   alias gremote='git remote get-url --all $(git remote)'
   # alias grpl="git reset HEAD --hard; git pull"
   alias glog='git log --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset" --date=format:"%m-%d-%Y %H:%M" --abbrev-commit'
+  alias gaddup='git remote add upstream'
+  gsyncfork () {
+    echo "Syncing this Forked Repo with Upstream"
+    updefined=$(git remote)
+    if [[ ! "$updefined" =~ upstream ]]; then
+      echo "Upstream Repo not Configured - use 'gitaddup' alias to add it"
+      return 1
+    else
+      git fetch upstream
+      git checkout master
+      git merge upstream/master
+    fi
+  }
 
 #### NETWORK
   # LOCAL IP ADDRESS
@@ -176,7 +189,7 @@ update-all() {
     sudo chmod g+srwx "$1"
   }
 
-#### GENERAL ALISES
+#### GENERAL ALIASES
   # ENABLE SUDOING ALIASES
   alias sudo='sudo '
   # RELOAD SHELL (invoke as a login shell)

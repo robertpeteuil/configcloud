@@ -9,7 +9,7 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.7"
+aliasfilenum="2.0.8"
 aliasfiledate="2018-01-28"
 
 
@@ -189,7 +189,7 @@ update-all() {
     sudo chmod g+srwx "$1"
   }
   find-broken() {
-    eval $(gdircolors)
+    eval $(dircolors)
     if [[ ! "$1" ]]; then
       searchDir="."
     else

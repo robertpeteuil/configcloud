@@ -12,8 +12,8 @@
 #
 
 scriptname="install.sh"
-scriptbuildnum="2.0.2"
-scriptbuilddate="2018-01-22"
+scriptbuildnum="2.0.3"
+scriptbuilddate="2018-01-28"
 
 
 ################################################################
@@ -594,7 +594,7 @@ for s in $link_children_sources; do
   children=$(echo $s/*)
   # WILL NOT delete an existing DIR, if TARGET:
   #   'exists as a DIR' - make links in it
-  #   'doesnt exist' - create it, then make links in it
+  #   'doesn't exist' - create it, then make links in it
   #   'exists but not a DIR':
   #       log error, generate log of failures by attempting link creation
   #       note: failures not discoverable in test-mode

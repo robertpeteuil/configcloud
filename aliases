@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.6"
-aliasfiledate="2018-01-25"
+aliasfilenum="2.0.7"
+aliasfiledate="2018-01-28"
 
 
 #### VARS
@@ -187,6 +187,15 @@ update-all() {
     sudo mkdir -p "$1"
     sudo chown ${USER:=$(/usr/bin/id -run)}:$grpOwner $1
     sudo chmod g+srwx "$1"
+  }
+  find-broken() {
+    eval $(gdircolors)
+    if [[ ! "$1" ]]; then
+      searchDir="."
+    else
+      searchDir="$1"
+    fi
+    find -L "$searchDir" -type l -exec ls -lF --color=yes '{}' +
   }
 
 #### GENERAL ALIASES

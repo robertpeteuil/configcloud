@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.3"
-bashconfigdate="2018-01-22"
+bashconfignum="2.0.4"
+bashconfigdate="2018-01-30"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -25,7 +25,7 @@ if [ -z "$BASH_VERSION" ]; then
   return &> /dev/null || exit
 fi
 
-###### DEFINES
+###### SET PROMPT TYPE
 prompt_style="GIT"  # 2-line prompt, displays info for repo dirs 
 # unset prompt_style  # typical-style prompt
 # prompt_style="DEMO"  # prompt for screen-caps, displays only $DEMOHOST
@@ -136,8 +136,8 @@ P_SYMBOL="\$ "
 ###### PROMPT
 if [[ $prompt_style == "GIT" ]] && [[ -e "$HOME/.bash-git-prompt/gitprompt.sh" ]]; then
   export PROMPT_COMMAND='echo -ne "\033]1;"$(hostname -s)"\007"'
-  GIT_PROMPT_THEME=Custom  
-  GIT_PROMPT_THEME_FILE=~/.bash-git-prompt/CustomRP.sh 
+  GIT_PROMPT_IGNORE_SUBMODULES=1  
+  GIT_PROMPT_THEME_FILE=~/.bash-git-prompt/custom_config.sh 
   . "$HOME/.bash-git-prompt/gitprompt.sh"
 elif [[ $prompt_style == "DEMO" ]]; then
   export PROMPT_COMMAND='echo -ne "\033]1;${DEMOHOST}\007"'

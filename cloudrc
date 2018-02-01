@@ -9,8 +9,8 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.0"
-cloudrcdate="2018-01-22"
+cloudrcnum="2.1.1"
+cloudrcdate="2018-02-01"
 
 
 ##### LOAD CONFIG INFO PRESENT
@@ -20,36 +20,12 @@ sourceIf "$HOME/.cloud/.cloud_config"
 GCP_DOCKER_LOGIN=""
 GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
 
-
-
 ###### FUNCTIONS
 sourceIf () {
   if [ -e "$1" ]; then
     . "$1"
   fi
 }
-# GET-GCP-TOKEN
-get-gcp-token () {
-  GCP_TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google")
-}
-# DOCKER-LOGIN-GCP
-docker-login-gcp () {
-  get-gcp-token
-  if [[ "$GCP_TOKEN" =~ access_token ]]; then
-    echo "gcp-based host - using token login"
-    docker login -u oauth2accesstoken -p "$GCP_TOKEN" https://gcr.io
-    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
-  elif [[ -n "${GCP_JSON}" ]]; then
-    echo "using key based login"
-    docker login -u _json_key -p "$(cat $GCP_JSON)" https://gcr.io
-    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
-  else
-    echo -n "no token or key - "
-    GCP_DOCKER_LOGIN="failed"
-  fi
-  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && return 1
-}
-
 
 ##### SOURCE CLOUD SDKs
 ## AWS
@@ -77,8 +53,29 @@ if [[ -n "$AWS_ACCESS_KEY_ID" ]]; then
 fi
 
 ## GCLOUD
+# GET-GCP-TOKEN
+gcp-get-token () {
+  GCP_TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google")
+}
+# GCP-DOCKER-LOGIN
+gcp-docker-login () {
+  gcp-get-token
+  if [[ "$GCP_TOKEN" =~ access_token ]]; then
+    echo "gcp-based host - using token login"
+    docker login -u oauth2accesstoken -p "$GCP_TOKEN" https://gcr.io
+    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
+  elif [[ -n "${GCP_JSON}" ]]; then
+    echo "using key based login"
+    docker login -u _json_key -p "$(cat $GCP_JSON)" https://gcr.io
+    [[ "$?" == 0 ]] && GCP_DOCKER_LOGIN="success" || GCP_DOCKER_LOGIN="failed"
+  else
+    echo -n "no token or key - "
+    GCP_DOCKER_LOGIN="failed"
+  fi
+  [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && return 1
+}
 # PUSH TO GCP IMAGE REPO
-dpush-gcp () {
+gcp-dpush () {
   [[ -z "$1" ]] && echo "specify \$1 as image name to push" && return 1
   [[ -z "$GCP_PROJ" ]] && echo "gcloud project not set, exiting..." && return 1
   [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && return 1
@@ -90,7 +87,8 @@ dpush-gcp () {
   fi
 }
 if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
-  alias gcd='gcloud docker'
+  alias gcp='gcloud '
+  alias gcp-dock='gcloud docker'
   # LIST INSTANCES
   alias gcp-list="gcloud compute instances list --format='table(name:sort=1, zone, machineType.machine_type().basename(), networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
   # MOBILE FORMATTED LIST OF INSTANCES
@@ -125,6 +123,10 @@ fi
 
 ## AZURE
 if [[ -n "$AZURE_TENANT_ID" ]]; then
+  # GET TOKEN USING AZURE CREDS IN ENV VARS
+  azure-get-token() {
+    AZURE_TOKEN=$(curl -s --header "accept: application/json" --request POST "https://login.windows.net/$AZURE_TENANT_ID/oauth2/token" --data-urlencode "resource=https://management.core.windows.net/" --data-urlencode "client_id=$AZURE_CLIENT_ID" --data-urlencode "grant_type=client_credentials" --data-urlencode "client_secret=$AZURE_CLIENT_SECRET" | jq -r '.access_token')
+  }
   # LIST INSTANCES
   azure-list() {
     az vm list -d --query "[].{ name: name, ResourceGroup: resourceGroup, MachineType: hardwareProfile.vmSize, FQDNS: fqdns, State: powerState}" -o=table

@@ -9,8 +9,8 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.1"
-cloudrcdate="2018-02-01"
+cloudrcnum="2.1.2"
+cloudrcdate="2018-02-02"
 
 
 ##### LOAD CONFIG INFO PRESENT
@@ -156,7 +156,7 @@ if [[ -n "$AZURE_TENANT_ID" ]]; then
   az-start() {
     if [[ -z "$2" ]] && [[ -n "$1" ]]; then
       az vm start --ids $(az vm list -g "$1" --query "[].id" -o tsv)
-    elif [[ -n "$1" ]]; then
+    elif [[ -n "$1" ]] && [[ -n "$2" ]]; then
       az vm start -n "$1" -g "$2"
     else
       echo "One or Two Params Required:"
@@ -168,7 +168,7 @@ if [[ -n "$AZURE_TENANT_ID" ]]; then
   az-stop() {
     if [[ -z "$2" ]] && [[ -n "$1" ]]; then
       az vm deallocate --ids $(az vm list -g "$1" --query "[].id" -o tsv) --no-wait
-    elif [[ -n "$1" ]]; then
+    elif [[ -n "$1" ]] && [[ -n "$2" ]]; then
       az vm deallocate -n "$1" -g "$2"
     else
       echo "One or Two Params Required:"

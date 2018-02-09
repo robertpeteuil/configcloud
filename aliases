@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.8"
-aliasfiledate="2018-01-28"
+aliasfilenum="2.0.9"
+aliasfiledate="2018-02-09"
 
 
 #### VARS
@@ -102,6 +102,7 @@ update-all() {
   alias drmsall='drmsc; drmsi; drmsv'
   alias dim='docker images'
   alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+  alias dpsa="docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dpss="docker ps --format 'table {{.Names}}\t{{.Status}}'"
   alias dpsi="docker ps --format 'table {{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dstat="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"

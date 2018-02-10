@@ -9,8 +9,8 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.2"
-cloudrcdate="2018-02-02"
+cloudrcnum="2.1.3"
+cloudrcdate="2018-02-09"
 
 
 ##### LOAD CONFIG INFO PRESENT
@@ -18,7 +18,7 @@ sourceIf "$HOME/.cloud/.cloud_config"
 
 ###### VARS
 GCP_DOCKER_LOGIN=""
-GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
+[[ -z "$GCP_PROJ" ]] && GCP_PROJ=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
 
 ###### FUNCTIONS
 sourceIf () {

@@ -1,0 +1,58 @@
+# HEADERS
+regexp=(?:\s|^)(REPOSITORY|TAG|IMAGE ID|CREATED|SIZE)(?:\s|$)
+#regexp=(^|\s.)(REPOSITORY|TAG|IMAGE ID|CREATED|SIZE)(\s.|$)
+colours=default,underline bright_blue
+# =====
+# REPO, TAG
+# regexp=^([a-z]+\/?[^\s]+)\s+([^\s]+)
+# colours=default,cyan,yellow,bright_yellow
+# colours=default,bold white,cyan,bold black
+=======
+# repo, tag, image id - COLORS TAG, ID
+regexp=^([a-z]+\/?[^\s]+)\s+([^\s]+)\s+(\w+)
+colours=default,default,bright_cyan,bright_yellow
+=====
+# LATEST
+regexp=\s+(latest)\s+
+colours=unchanged,bright_cyan
+=====
+# COLORS REPO/IMAGE
+regexp=^(?:([a-z\-_0-9]+)/)*([a-z\-_0-9]+)\s
+colours=default,bright_magenta,default
+# colours=default,yellow,bright_white
+=====
+# IMAGE WITHOUT NAME
+regexp=^<none>.*$
+colours=bright_red
+=====
+# SIZE 'K'
+regexp=(\s\d*[\.,]?\d*)(KB)
+colours=default,bright_green,default
+replace=\1 \2
+# regexp=\s\d*[\.,]?\d*KB?
+# colours=yellow
+======
+# Size 'M', 2 digits
+regexp=(\s\d{1,2}[\.,]\d*)(MB)
+colours=default,bright_green,default
+replace=\1 \2
+# regexp=\s\d{1,2}[\.,]?\d*MB?
+# regexp=(?:\s(\d{1,2}[\.,]\d*)?(MB))
+======
+# SIZE 'M' 3+ digits
+regexp=(\s\d{3,4}[\.,]?\d*)(MB)
+colours=default,bright_green,default
+replace=\1 \2
+# regexp=\s\d{3,4}[\.,]?\d*MB?
+# colours=yellow
+======
+# SIZE 'G'
+regexp=(\s\d*[\.,]?\d*)(GB)
+colours=default,magenta,default
+replace=\1 \2
+# regexp=\s\d*[\.,]?\d*GB?
+# colours=red
+======
+# DATE AGO
+regexp=(?:\s{2}|^)(?:\w+\s)+ago
+colours=cyan

@@ -1,0 +1,51 @@
+# This is for docker ps and docker-compose ps
+# HEADERS
+regexp=(?:\s{2}|^)(CONTAINER ID|IMAGE|COMMAND|CREATED|STATUS|PORTS|NAMES|Name|Command|State|Ports)(?:\s|$)
+colours=default,underline bright_blue
+======
+# QUOTES, COMMAND
+regexp=(?:\s{2}|^)(?:\s\")(.*)(?:\")(?:\s{2}|$)
+colours=bright_blue,default
+# colours=magenta
+=======
+# CREATED - Date Ago (docker ps)
+regexp=(?:\s{2}|^)(?:\w+\s)+ago
+colours=default
+# colours=cyan
+======
+# STATUS UP
+regexp=(?:\s{2}|^)(?:Up|Restarting)(?:(?:\s[\w,\d,(,)]+)+)?
+colours=bright_green
+# colours=bold green
+======
+# STATUS DOWN
+regexp=(?:\s{2}|^)(?:Exited|Exit|Dead|Removal In Progress)(?:(?:\s[\w,\d,(,)]+)+)?
+colours=bright_red
+=======
+# IP ADDRESSES, ':', INTER PORT, '->', EXT PORT, '/', PROTO
+regexp=(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\:)?(\d{1,5}))?(->)?(\d{1,5})(\/)(\w+)
+colours=default,bright_blue,bright_cyan,default,bright_yellow,bright_blue,yellow
+# colours=blue,default,bright_green,default,bright_green,default,bright_blue
+=======
+# INTERNAL ONLY - PORT, '/', PROTO
+regexp=(?:\s(\d{1,5})(\/)(\w+))
+colours=default,bright_cyan,bright_blue,default
+# regexp=(?:\s(->)?(\d{1,5})(\/)(\w+))
+# colours=default,default,green,default,default
+=======
+# NAME (& STATUS in DPS alias)
+regexp=(?:\s{2}|^)(?:[a-z\-_0-9]+)(?:\s{2}|$)(?:\s+(.+?)\s{2,})?
+colours=default,bright_green
+# colours=bold yellow,magenta
+=======
+# ID, IMAGE REPO, IMAGE-NAME
+# Need to be together to override the "name" regex.
+regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:([a-z\-_0-9]+)/)*([a-z\-_0-9]+)\s)
+colours=default,bright_yellow,default,bright_magenta,cyan
+# regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:(?:[a-z\-_0-9\.]+)+(\/|:)?)+)
+=======
+# IMAGE NAME IN CUSTOM 1ST COL
+regexp=^(([a-z\-_0-9]+)/)([a-z\-_0-9]+)\s
+colours=cyan,default,bright_magenta
+# Still need to Fix NAMES field in custom view
+#   and coloring of images without / in them

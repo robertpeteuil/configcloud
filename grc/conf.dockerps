@@ -38,14 +38,10 @@ regexp=(?:\s{2}|^)(?:[a-z\-_0-9]+)(?:\s{2}|$)(?:\s+(.+?)\s{2,})?
 colours=default,bright_green
 # colours=bold yellow,magenta
 =======
-# ID, IMAGE REPO, IMAGE-NAME
-# Need to be together to override the "name" regex.
-regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:(?:[a-z\-_0-9\.]+)+(\/|:)?)+)
-colours=default,bright_yellow,cyan,bright_yellow
-# regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:([a-z\-_0-9]+)/)*([a-z\-_0-9.\:]+)\s)
+# ID FOR IMAGES WITHOUT REPO - OPTIONAL TAG
+regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}([a-z\-_0-9\.]+)(:?)(([a-z\-_0-9\.]*)?)
+colours=default,bright_yellow,cyan,bright_yellow,white
 =======
-# IMAGE NAME IN CUSTOM 1ST COL
-regexp=^(([a-z\-_0-9]+)/)([a-z\-_0-9]+)\s
-colours=cyan,default,bright_magenta
-# Still need to Fix NAMES field in custom view
-#   and coloring of images without / in them
+# ID FOR IMAGES BEGINNING WITH REPO AND OPTIONAL TAG
+regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}([a-z\-_0-9\.]+)(\/)([a-z\-_0-9\.]*)(:?)([a-z\-_0-9\.]*)
+colours=default,bright_yellow,magenta,bright_yellow ,cyan,bright_yellow,white

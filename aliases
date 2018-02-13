@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.9"
-aliasfiledate="2018-02-09"
+aliasfilenum="2.0.11"
+aliasfiledate="2018-02-13"
 
 
 #### VARS
@@ -132,7 +132,7 @@ update-all() {
   alias gcodb="git checkout develop"
   alias ga="git add"
   alias gcm="git commit -m"
-  alias gacm="git commit -a -m"
+  alias gacmpush='git add .;git commit -m "updates";git push'
   alias gremote='git remote get-url --all $(git remote)'
   # alias grpl="git reset HEAD --hard; git pull"
   alias glog='git log --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset" --date=format:"%m-%d-%Y %H:%M" --abbrev-commit'
@@ -238,7 +238,7 @@ update-all() {
 
 #### COLORIZATION
   # COLOR DIR / VDIR
-  if $(dir --color &> /dev/null); then 
+  if $(dir --color &> /dev/null); then
     alias dir='dir --color'
   else
     alias dir='dir -G'
@@ -252,28 +252,4 @@ update-all() {
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
-  # GRC COLORIZATION OF OTHER UTILS
-  GRC=$(which grc 2>/dev/null)
-  if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
-    alias colorify="$GRC -es --colour=auto"
-    alias configure='colorify ./configure'
-    alias diff='colorify diff'
-    alias make='colorify make'
-    alias gcc='colorify gcc'
-    alias g++='colorify g++'
-    alias as='colorify as'
-    alias gas='colorify gas'
-    alias ld='colorify ld'
-    alias netstat='colorify netstat'
-    alias ping='colorify ping'
-    alias traceroute='colorify /usr/sbin/traceroute'
-    alias arp='colorify -c conf.traceroute arp'
-    alias tail='colorify -c conf.log tail'
-    alias ps='colorify -c conf.ps ps'
-    alias ifconfig='colorify -c conf.ifconfig ifconfig'
-    alias nmap='colorify -c conf.nmap nmap'
-    alias lsof='colorify -c conf.lsof lsof'
-    alias dig='colorify -c conf.traceroute dig'
-    alias host='colorify -c conf.traceroute host'
-    alias curl='colorify -c conf.curl curl'
-  fi
+

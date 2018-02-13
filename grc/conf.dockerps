@@ -40,9 +40,9 @@ colours=default,bright_green
 =======
 # ID, IMAGE REPO, IMAGE-NAME
 # Need to be together to override the "name" regex.
-regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:([a-z\-_0-9]+)/)*([a-z\-_0-9]+)\s)
-colours=default,bright_yellow,default,bright_magenta,cyan
-# regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:(?:[a-z\-_0-9\.]+)+(\/|:)?)+)
+regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:(?:[a-z\-_0-9\.]+)+(\/|:)?)+)
+colours=default,bright_yellow,cyan,bright_yellow
+# regexp=(?:\s{2}|^)([a-z0-9]+)\s{2,}((?:([a-z\-_0-9]+)/)*([a-z\-_0-9.\:]+)\s)
 =======
 # IMAGE NAME IN CUSTOM 1ST COL
 regexp=^(([a-z\-_0-9]+)/)([a-z\-_0-9]+)\s

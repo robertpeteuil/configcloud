@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#   BASHRC - Bash Settings, Prompt Cust, Config Settings and Sources Additional Files  
+#   BASHRC - Bash Settings, Prompt Cust, Config Settings and Sources Additional Files
 #
 #     This script is a component of ConfigCloud
 #       https://github.com/robertpeteuil/configcloud
@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.4"
-bashconfigdate="2018-01-30"
+bashconfignum="2.0.5"
+bashconfigdate="2018-02-13"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -26,11 +26,11 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 ###### SET PROMPT TYPE
-prompt_style="GIT"  # 2-line prompt, displays info for repo dirs 
+prompt_style="GIT"  # 2-line prompt, displays info for repo dirs
 # unset prompt_style  # typical-style prompt
 # prompt_style="DEMO"  # prompt for screen-caps, displays only $DEMOHOST
 # DEMOHOST used and required if prompt_style="DEMO"
-DEMOHOST="cloudhost"
+DEMOHOST="Host"
 
 ###### VARS
 OS=$(uname -s)
@@ -127,7 +127,7 @@ fi
 ESCON="\["
 ESCOFF="\]"
 P_TIME="\@"
-P_HOSTNAME="\h" 
+P_HOSTNAME="\h"
 P_USER="\u"
 P_DIR="\w"
 P_DIR_SM="\W"
@@ -136,29 +136,29 @@ P_SYMBOL="\$ "
 ###### PROMPT
 if [[ $prompt_style == "GIT" ]] && [[ -e "$HOME/.bash-git-prompt/gitprompt.sh" ]]; then
   export PROMPT_COMMAND='echo -ne "\033]1;"$(hostname -s)"\007"'
-  GIT_PROMPT_IGNORE_SUBMODULES=1  
-  GIT_PROMPT_THEME_FILE=~/.bash-git-prompt/custom_config.sh 
+  GIT_PROMPT_IGNORE_SUBMODULES=1
+  GIT_PROMPT_THEME_FILE=~/.bash-git-prompt/custom_config.sh
   . "$HOME/.bash-git-prompt/gitprompt.sh"
 elif [[ $prompt_style == "DEMO" ]]; then
   export PROMPT_COMMAND='echo -ne "\033]1;${DEMOHOST}\007"'
   if [ "$(id -u)" -eq 0 ]; then
     export PS1="${PRED}${DEMOHOST}${COLOR_RESET}:${PYELLOW}${P_DIR}${COLOR_RESET}${P_SYMBOL}"
-  else 
+  else
     export PS1="${PGREEN}${DEMOHOST}${COLOR_RESET}:${PCYAN}${P_DIR}${COLOR_RESET}${P_SYMBOL}"
-  fi  
+  fi
   export SUDO_PS1="${PRED}${DEMOHOST}${COLOR_RESET}:${PYELLOW}${P_DIR_SM}${COLOR_RESET}${P_SYMBOL}"
 else
   export PROMPT_COMMAND='echo -ne "\033]1;"$(hostname -s)"\007"'
   if [ "$(id -u)" -eq 0 ]; then
     export PS1="${PRED}${P_HOSTNAME}${COLOR_RESET}:${PYELLOW}${P_DIR}${COLOR_RESET}${P_SYMBOL}"
-  else 
+  else
     export PS1="${PGREEN}${P_HOSTNAME}${COLOR_RESET}:${PCYAN}${P_DIR}${COLOR_RESET}${P_SYMBOL}"
-  fi  
+  fi
   export SUDO_PS1="${PRED}${P_HOSTNAME}${PWHITE}:${PYELLOW}${P_DIR_SM}${COLOR_RESET}${P_SYMBOL}"
 fi
 
 # AVOID XTERM-NEW ON DEBIAN
-if [[ -f /etc/debian_version ]] ; then  
+if [[ -f /etc/debian_version ]] ; then
   if [[ "$TERM" == "xterm-new" ]]; then
     export TERM="xterm"
   fi
@@ -178,6 +178,11 @@ export PATH
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 unset color_enabled
+
+GRC=$(which grc 2>/dev/null)
+if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
+  sourceIf "$HOME/.grc/grc.bashrc"
+fi
 
 ###### SOURCE FILES
 sourceIf "$HOME/.cloudrc"

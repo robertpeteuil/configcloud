@@ -31,5 +31,13 @@
   b = branch
   wdiff = diff --word-diff=color --unified=1
   up = "!git remote update -p; git merge --ff-only @{u}"
+  # Mark a file as "assume unchanged", which means that Git will treat it
+  # as though there are no changes to it even if there are. Useful for
+  # temporary changes to tracked files
+  assume = update-index --assume-unchanged
+  # Reverse the above
+  unassume = update-index --no-assume-unchanged
+  # Show the files that are currently assume-unchanged
+  assumed = "!git ls-files -v | grep ^h | cut -c 3-"
 [pull]
   ff = only

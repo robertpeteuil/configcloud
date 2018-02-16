@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.11"
-aliasfiledate="2018-02-13"
+aliasfilenum="2.0.12"
+aliasfiledate="2018-02-15"
 
 
 #### VARS
@@ -107,9 +107,10 @@ update-all() {
   alias dpsi="docker ps --format 'table {{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dstat="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
   alias dstats="docker stats --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
-  docker-ip() {
+  dockerip () {
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$@"
   }
+  alias dcip='dockerip'
 
 #### GIT
   if [[ -n $GIT_INST ]]; then
@@ -133,22 +134,35 @@ update-all() {
   alias ga="git add"
   alias gcm="git commit -m"
   alias gacmpush='git add .;git commit -m "updates";git push'
-  alias gremote='git remote get-url --all $(git remote)'
+  alias gremote='git remote -v'
+  # alias gremote='git remote get-url --all $(git remote)'
   # alias grpl="git reset HEAD --hard; git pull"
   alias glog='git log --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset" --date=format:"%m-%d-%Y %H:%M" --abbrev-commit'
-  alias gaddup='git remote add upstream'
-  gsyncfork () {
-    echo "Syncing this Forked Repo with Upstream"
+  gitaddupstream () {
+    [[ -z "$1" ]] && echo "specify URL or remote as param1" && return 1
+    git remote add upstream "$1"
+    git remote set-url --push upstream DISABLE
+  }
+  alias gaddupstream='gitaddupstream'
+  gitsyncupstream () {
+    if [[ -z "$1" ]]; then
+      echo "Syncing with Upstream requires specifying local branch as param1"
+      return 1
+    else
+      echo "Syncing with Upstream to branch: $1"
+    fi
     updefined=$(git remote)
     if [[ ! "$updefined" =~ upstream ]]; then
       echo "Upstream Repo not Configured - use 'gitaddup' alias to add it"
       return 1
     else
       git fetch upstream
-      git checkout master
+      git checkout "$1"
       git merge upstream/master
+      git checkout -
     fi
   }
+  alias gsyncupstream='gitsyncupstream'
 
 #### NETWORK
   # LOCAL IP ADDRESS

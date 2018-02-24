@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.14"
-aliasfiledate="2018-02-23"
+aliasfilenum="2.0.15"
+aliasfiledate="2018-02-24"
 
 
 #### VARS
@@ -105,10 +105,10 @@ update-all() {
   alias dpsa="docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dpss="docker ps --format 'table {{.Names}}\t{{.Status}}'"
   alias dpsi="docker ps --format 'table {{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
-  alias dstat="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
-  alias dstat1="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
-  alias dstats="docker stats --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
-  alias dstats1="docker stats --no-stream --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
+  alias dstat="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
+  alias dstats="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
+  alias dstat-b="docker stats --no-stream --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
+  alias dstats-b="docker stats --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
   dockerip () {
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$@"
   }
@@ -165,6 +165,15 @@ update-all() {
     fi
   }
   alias gsyncupstream='gitsyncupstream'
+
+#### SYSTEMD
+  alias svc-stat='sudo systemctl status'
+  alias svc-start='sudo systemctl start'
+  alias svc-stop='sudo systemctl stop'
+  alias svc-enable='sudo systemctl enable'
+  alias svc-disable='sudo systemctl disable'
+  alias svc-daemon='sudo systemctl daemon-reload'
+  alias svc-journal='SYSTEMD_LESS=FRXMK journalctl -u'
 
 #### NETWORK
   # LOCAL IP ADDRESS
@@ -227,7 +236,6 @@ update-all() {
   alias mkdir='mkdir -p'
   alias df='df -h'
   alias ln='ln -v'
-  alias get-journal='SYSTEMD_LESS=FRXMK journalctl -u'
 
 #### HOST SETUP AND CONFIG
   # SET TIMEZONE

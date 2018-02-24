@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.13"
-aliasfiledate="2018-02-16"
+aliasfilenum="2.0.14"
+aliasfiledate="2018-02-23"
 
 
 #### VARS
@@ -227,6 +227,7 @@ update-all() {
   alias mkdir='mkdir -p'
   alias df='df -h'
   alias ln='ln -v'
+  alias get-journal='SYSTEMD_LESS=FRXMK journalctl -u'
 
 #### HOST SETUP AND CONFIG
   # SET TIMEZONE

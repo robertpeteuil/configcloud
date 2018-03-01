@@ -9,8 +9,8 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.4"
-cloudrcdate="2018-02-28"
+cloudrcnum="2.1.5"
+cloudrcdate="2018-03-01"
 
 
 ##### LOAD CONFIG INFO PRESENT
@@ -58,7 +58,7 @@ gcp-get-token () {
   GCP_TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google")
 }
 # GCP-DOCKER-LOGIN
-docker-login-gcp () {
+d-login-gcp () {
   gcp-get-token
   if [[ "$GCP_TOKEN" =~ access_token ]]; then
     echo "gcp-based host - using token login"
@@ -74,21 +74,25 @@ docker-login-gcp () {
   fi
   [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "gcp-docker login failed" && return 1
 }
+alias docker-login-gcp='d-login-gcp'
 # PUSH TO GCP IMAGE REPO
-gcp-dpush () {
+d-push-gcp () {
   [[ -z "$1" ]] && echo "specify \$1 as image name to push" && return 1
   [[ -z "$GCP_PROJECT_ID" ]] && echo "gcloud project not set, exiting..." && return 1
   [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && return 1
-  [[ "$GCP_DOCKER_LOGIN" != "success" ]] && docker-login-gcp
+  [[ "$GCP_DOCKER_LOGIN" != "success" ]] && d-login-gcp
   if [[ "$GCP_DOCKER_LOGIN" == "success" ]]; then
-    docker tag $1 "gcr.io/${GCP_PROJECT_ID}/$1"
-    docker push "gcr.io/${GCP_PROJECT_ID}/$1"
-    docker rmi "gcr.io/${GCP_PROJECT_ID}/$1"
+    # remove one repo prefix if exists, change to ## to remove all
+    image_name=${$1#*/}
+    docker tag $1 "gcr.io/${GCP_PROJECT_ID}/$image_name"
+    docker push "gcr.io/${GCP_PROJECT_ID}/$image_name"
+    docker rmi "gcr.io/${GCP_PROJECT_ID}/$image_name"
   fi
 }
+alias docker-push-gcp='d-push-gcp'
 if [ -e "$HOME/.config/gcloud/credentials.db" ]; then
-  alias gcp='gcloud '
-  alias gcp-dock='gcloud docker'
+  alias docker-gcp='gcloud docker'
+  alias gcp-docker='gcloud docker'
   # LIST INSTANCES
   alias gcp-list="gcloud compute instances list --format='table(name:sort=1, zone, machineType.machine_type().basename(), networkInterfaces[].networkIP.notnull().list():label=INTERNAL_IP, networkInterfaces[].accessConfigs[0].natIP.notnull().list():label=EXTERNAL_IP, status)'"
   # MOBILE FORMATTED LIST OF INSTANCES

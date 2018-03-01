@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.15"
-aliasfiledate="2018-02-24"
+aliasfilenum="2.0.16"
+aliasfiledate="2018-03-01"
 
 
 #### VARS
@@ -61,9 +61,10 @@ update-all() {
     fi
   elif [[ "$pkg_cmd" == "yum" ]]; then
     echo -e "${GREEN}Updating via ${pkg_cmd}...${WHITE}"
+    sudo yum makecache fast
     sudo yum update -y
     if [[ "$1" == "clean" ]]; then
-      yum clean expire-cache
+      sudo yum clean packages expire-cache
     fi
   else
     echo -e "${RED}Unknown Package Manager - Packages not updated${WHITE}"
@@ -96,11 +97,12 @@ update-all() {
   alias d='docker'
   alias d-c='docker-compose'
   # alias drms='docker rm $(docker ps -a -q | grep -v $(docker ps -q))'
-  alias drmsc='docker rm $(docker ps -q -f 'status=exited')'
-  alias drmsi='docker rmi $(docker images -q -f "dangling=true")'
+  alias drmsc='docker rm $(docker ps -q -f 'status=exited') 2> /dev/null'
+  alias drmsi='docker rmi $(docker images -q -f "dangling=true") 2> /dev/null'
   alias drmsv='docker volume prune -f'
   alias drmsall='drmsc; drmsi; drmsv'
   alias dim='docker images'
+  alias dima='docker images -a'
   alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dpsa="docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dpss="docker ps --format 'table {{.Names}}\t{{.Status}}'"
@@ -255,11 +257,12 @@ update-all() {
   # INSTALL SYSIS
   alias install-sysis='bash -c "`curl -s -L https://raw.github.com/robertpeteuil/sysis/master/install.sh`"'
   # INSTALL PIP
-  install-pip() {
+  pip-installer () {
     curl -s https://bootstrap.pypa.io/get-pip.py > get-pip.py
     chmod +x get-pip.py
     sudo -H python get-pip.py
   }
+  alias install-pip='pip-installer'
 
 #### COLORIZATION
   # COLOR DIR / VDIR

@@ -107,7 +107,7 @@ esac
 
 # SET COLOR VARS
 if [ "$color_enabled" = yes ]; then
-  COLOR_RESET="\033[1m"
+  COLOR_RESET="\033[0m"
   BLUE="\033[1;34m"
   WHITE="\033[1;37m"
   RED="\033[1;31m"
@@ -116,7 +116,7 @@ if [ "$color_enabled" = yes ]; then
   CYAN="\033[0;36m"
 
   PBLUE="${ESCON}${BLUE}${ESCOFF}"
-  PWHITE="${ESCON}${COLOR_RESET}${ESCOFF}"
+  PWHITE="${ESCON}${WHITE}${ESCOFF}"
   PGREEN="${ESCON}${GREEN}${ESCOFF}"
   PRED="${ESCON}${RED}${ESCOFF}"
   PYELLOW="${ESCON}${YELLOW}${ESCOFF}"

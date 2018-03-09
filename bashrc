@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.5"
-bashconfigdate="2018-02-13"
+bashconfignum="2.0.6"
+bashconfigdate="2018-03-09"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -26,7 +26,7 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 ###### SET PROMPT TYPE
-prompt_style="GIT"  # 2-line prompt, displays info for repo dirs
+# prompt_style="GIT"  # 2-line prompt, displays info for repo dirs
 # unset prompt_style  # typical-style prompt
 # prompt_style="DEMO"  # prompt for screen-caps, displays only $DEMOHOST
 # DEMOHOST used and required if prompt_style="DEMO"
@@ -107,7 +107,7 @@ esac
 
 # SET COLOR VARS
 if [ "$color_enabled" = yes ]; then
-  COLOR_RESET="\033[0m"
+  COLOR_RESET="\033[1m"
   BLUE="\033[1;34m"
   WHITE="\033[1;37m"
   RED="\033[1;31m"

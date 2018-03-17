@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.7"
-bashconfigdate="2018-03-11"
+bashconfignum="2.0.8"
+bashconfigdate="2018-03-17"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -116,11 +116,15 @@ if [ "$color_enabled" = yes ]; then
   CYAN="\033[0;36m"
 
   PBLUE="${ESCON}${BLUE}${ESCOFF}"
-  PWHITE="${ESCON}${WHITE}${ESCOFF}"
+  PWHITE="${ESCON}${COLOR_RESET}${ESCOFF}"
   PGREEN="${ESCON}${GREEN}${ESCOFF}"
   PRED="${ESCON}${RED}${ESCOFF}"
   PYELLOW="${ESCON}${YELLOW}${ESCOFF}"
   PCYAN="${ESCON}${CYAN}${ESCOFF}"
+fi
+
+if [[ $TERM == "linux" ]]; then
+  PWHITE="${ESCON}${WHITE}${ESCOFF}"
 fi
 
 # SET PROMPT ITEMS

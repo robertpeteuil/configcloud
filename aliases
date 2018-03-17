@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.17"
-aliasfiledate="2018-03-09"
+aliasfilenum="2.0.18"
+aliasfiledate="2018-03-17"
 
 
 #### VARS
@@ -114,7 +114,12 @@ update-all() {
   dockerip () {
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$@"
   }
-  alias dcip='dockerip'
+  alias d-ip='dockerip'
+  dockerexec () {
+    [[ -z "$1" ]] && echo "specify name of container as \$1" && return 1
+    docker exec -it "$1" bash
+  }
+  alias dexec='dockerexec'
 
 #### GIT
   if [[ -n $GIT_INST ]]; then

@@ -9,7 +9,7 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.5"
+cloudrcnum="2.1.6"
 cloudrcdate="2018-03-01"
 
 
@@ -83,7 +83,7 @@ d-push-gcp () {
   [[ "$GCP_DOCKER_LOGIN" != "success" ]] && d-login-gcp
   if [[ "$GCP_DOCKER_LOGIN" == "success" ]]; then
     # remove one repo prefix if exists, change to ## to remove all
-    image_name=${$1#*/}
+    image_name=${1#*/}
     docker tag $1 "gcr.io/${GCP_PROJECT_ID}/$image_name"
     docker push "gcr.io/${GCP_PROJECT_ID}/$image_name"
     docker rmi "gcr.io/${GCP_PROJECT_ID}/$image_name"

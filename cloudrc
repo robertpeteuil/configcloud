@@ -9,8 +9,8 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.6"
-cloudrcdate="2018-03-17"
+cloudrcnum="2.1.7"
+cloudrcdate="2018-03-20"
 
 
 ##### LOAD CONFIG INFO PRESENT
@@ -18,7 +18,6 @@ sourceIf "$HOME/.cloud/.cloud_config"
 
 ###### VARS
 GCP_DOCKER_LOGIN=""
-[[ -z "$GCP_PROJECT_ID" ]] && GCP_PROJECT_ID=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
 
 ###### FUNCTIONS
 sourceIf () {
@@ -53,6 +52,10 @@ if [[ -n "$AWS_ACCESS_KEY_ID" ]]; then
 fi
 
 ## GCLOUD
+# GCP-GET PROJECT ID
+gcp-get-project () {
+  [[ -z "$GCP_PROJECT_ID" ]] && GCP_PROJECT_ID=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')
+}
 # GET-GCP-TOKEN
 gcp-get-token () {
   GCP_TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google")
@@ -78,6 +81,7 @@ alias docker-login-gcp='d-login-gcp'
 # PUSH TO GCP IMAGE REPO
 d-push-gcp () {
   [[ -z "$1" ]] && echo "specify \$1 as image name to push" && return 1
+  gcp-get-project
   [[ -z "$GCP_PROJECT_ID" ]] && echo "gcloud project not set, exiting..." && return 1
   [[ "$GCP_DOCKER_LOGIN" == "failed" ]] && echo "cannot push to gcp-docker - login failed" && return 1
   [[ "$GCP_DOCKER_LOGIN" != "success" ]] && d-login-gcp

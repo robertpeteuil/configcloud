@@ -9,7 +9,7 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.7"
+cloudrcnum="2.1.8"
 cloudrcdate="2018-03-20"
 
 
@@ -52,6 +52,35 @@ if [[ -n "$AWS_ACCESS_KEY_ID" ]]; then
 fi
 
 ## GCLOUD
+# GCP CLOUD SHELL
+gcp-mount-shell () {
+  [[ -z "$1" ]] && echo "specify \$1 as location to mount shell drive at" && return 
+  if $(gcloud alpha config list &> /dev/null); then
+     GCP_MNT_DIR="$1"
+     get_cmd="gcloud alpha cloud-shell get-mount-command $GCP_MNT_DIR"
+     mnt_cmd=$(bash -c "$get_cmd" | awk '/^sshfs/ {print $0}')
+     if $(bash -c "$mnt_cmd"); then
+       export GCP_MNT_DIR
+       echo "gcp shell volume mounted at: $GCP_MNT_DIR"
+     else
+       unset GCP_MNT_DIR
+     fi
+  else
+    echo "gcloud alpha component not installed"
+  fi
+}
+alias gcp-mount='gcp-mount-shell'
+gcp-unmount-shell () {
+  [[ -z "$GCP_MNT_DIR" ]] && echo "gcp shell volume not mounted" && return 
+  OS=$(uname -s)
+  if [ "$OS" == 'Linux' ]; then
+    if $(fusermount -u "$GCP_MNT_DIR"); then
+      echo "sucessfully unmounted gcp shell volume"
+      unset GCP_MNT_DIR
+    fi
+  fi
+}
+alias gcp-unmount='gcp-unmount-shell'
 # GCP-GET PROJECT ID
 gcp-get-project () {
   [[ -z "$GCP_PROJECT_ID" ]] && GCP_PROJECT_ID=$(gcloud config list 2> /dev/null | awk '/^project/ {print $3}')

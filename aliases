@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.18"
-aliasfiledate="2018-03-17"
+aliasfilenum="2.0.19"
+aliasfiledate="2018-03-20"
 
 
 #### VARS
@@ -181,7 +181,7 @@ update-all() {
   alias svc-status='sudo systemctl status'
   alias svc-disable='sudo systemctl disable'
   alias svc-daemon='sudo systemctl daemon-reload'
-  alias svc-journal='SYSTEMD_LESS=FRXMK journalctl -u'
+  alias svc-journal='sudo SYSTEMD_LESS=FRXMK journalctl -u'
 
 #### NETWORK
   # LOCAL IP ADDRESS

@@ -9,7 +9,7 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.11"
+cloudrcnum="2.1.12"
 cloudrcdate="2018-03-20"
 
 
@@ -58,9 +58,10 @@ gcp-mount-shell () {
   [[ -z "$1" ]] && echo "Specify \$1 as location to mount shell drive at" && return
   GCP_MNT_DIR="${1/'~'/$HOME}"
   get_cmd="gcloud alpha cloud-shell get-mount-command $GCP_MNT_DIR"
-  mnt_cmd=$(bash -c "$get_cmd" | awk '/sshfs/ {print $0}')
-  if [[ "$mnt_cmd" ]]; then
-    mnt_cmd="${mnt_cmd//\'/}"
+  mnt_result=$(bash -c "$get_cmd" | grep -v "ERROR")
+  if [[ "$mnt_result" ]]; then
+    mnt_cmd_raw="${mnt_result//\'/}"
+    mnt_cmd=$(echo "$mnt_cmd_raw" | tr '\n' ' ')
     mkdir -p "$GCP_MNT_DIR"
     if $(bash -c "$mnt_cmd"); then
       export GCP_MNT_DIR

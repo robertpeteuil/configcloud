@@ -9,7 +9,7 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.10"
+cloudrcnum="2.1.11"
 cloudrcdate="2018-03-20"
 
 
@@ -38,6 +38,7 @@ sourceIf "/usr/local/bin/az.completion.sh"
 sourceIf "$HOME/google-cloud-sdk/path.bash.inc"
 sourceIf "$HOME/google-cloud-sdk/completion.bash.inc"
 sourceIf "/usr/lib/google-cloud-sdk/completion.bash.inc"
+sourceIf "/usr/share/google-cloud-sdk/completion.bash.inc"
 
 
 ##### PROVIDER SPECIFIC ALIASES

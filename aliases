@@ -9,7 +9,7 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.19"
+aliasfilenum="2.0.20"
 aliasfiledate="2018-03-20"
 
 
@@ -233,6 +233,8 @@ update-all() {
   }
 
 #### GENERAL ALIASES
+  # DISPLAY UNATTENDED UPDATE LOG
+  alias showuulog='cat /var/log/unattended-upgrades/unattended-upgrades.log'
   # ENABLE SUDOING ALIASES
   alias sudo='sudo '
   # RELOAD SHELL (invoke as a login shell)

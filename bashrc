@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.8"
-bashconfigdate="2018-03-17"
+bashconfignum="2.0.9"
+bashconfigdate="2018-03-21"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -63,6 +63,11 @@ pathIf "$HOME/.local/bin"
 pathIf "$HOME/scripts"
 pathIf "$HOME/pycharm-2017.2.4/bin"
 pathIf "/usr/lib/go-1.9/bin"
+
+###### CHECK FOR REBOOT REQUIRED
+if [[ "$OS" == "Linux" ]] && [[ -f /var/run/reboot-required ]]; then
+  echo "** Reboot Required **"
+fi
 
 ###### BASH CONFIG
 # don't put duplicate lines or lines starting with space in the history.

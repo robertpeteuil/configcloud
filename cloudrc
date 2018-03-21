@@ -9,7 +9,7 @@
 #
 
 cloudrcname=".cloudrc"
-cloudrcnum="2.1.8"
+cloudrcnum="2.1.10"
 cloudrcdate="2018-03-20"
 
 
@@ -54,7 +54,7 @@ fi
 ## GCLOUD
 # GCP CLOUD SHELL
 gcp-mount-shell () {
-  [[ -z "$1" ]] && echo "specify \$1 as location to mount shell drive at" && return
+  [[ -z "$1" ]] && echo "Specify \$1 as location to mount shell drive at" && return
   GCP_MNT_DIR="${1/'~'/$HOME}"
   get_cmd="gcloud alpha cloud-shell get-mount-command $GCP_MNT_DIR"
   mnt_cmd=$(bash -c "$get_cmd" | awk '/^sshfs/ {print $0}')
@@ -62,21 +62,23 @@ gcp-mount-shell () {
     mkdir -p "$GCP_MNT_DIR"
     if $(bash -c "$mnt_cmd"); then
       export GCP_MNT_DIR
-      echo "gcp shell volume mounted at: $GCP_MNT_DIR"
+      echo "Gcp shell volume mounted at: $GCP_MNT_DIR"
     else
+      echo "Mouting with sshfs failed"
       unset GCP_MNT_DIR
     fi
   else
+    echo "Retrieving mount string from gcloud util failed"
     unset GCP_MNT_DIR
   fi
 }
 alias gcp-mount='gcp-mount-shell'
 gcp-unmount-shell () {
-  [[ -z "$GCP_MNT_DIR" ]] && echo "gcp shell volume not mounted" && return
+  [[ -z "$GCP_MNT_DIR" ]] && echo "Gcp shell volume not mounted" && return
   OS=$(uname -s)
   if [ "$OS" == 'Linux' ]; then
     if $(fusermount -u "$GCP_MNT_DIR"); then
-      echo "sucessfully unmounted gcp shell volume"
+      echo "Sucessfully unmounted gcp shell volume"
       unset GCP_MNT_DIR
     fi
   fi

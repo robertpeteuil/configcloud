@@ -58,7 +58,8 @@ gcp-mount-shell () {
   [[ -z "$1" ]] && echo "Specify \$1 as location to mount shell drive at" && return
   GCP_MNT_DIR="${1/'~'/$HOME}"
   get_cmd="gcloud alpha cloud-shell get-mount-command $GCP_MNT_DIR"
-  mnt_result=$(bash -c "$get_cmd" | grep -v "ERROR")
+  mnt_result=$(bash -c "$get_cmd" | awk '/sshfs/ {{print $0} if (getline == 1) {next; print $0}}')
+  # mnt_result=$(bash -c "$get_cmd" | grep -v "ERROR")
   if [[ "$mnt_result" ]]; then
     mnt_cmd_raw="${mnt_result//\'/}"
     mnt_cmd=$(echo "$mnt_cmd_raw" | tr '\n' ' ')

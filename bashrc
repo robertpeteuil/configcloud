@@ -9,7 +9,7 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.9"
+bashconfignum="2.0.10"
 bashconfigdate="2018-03-21"
 
 
@@ -110,6 +110,16 @@ case "$TERM" in
  linux) color_enabled=yes;;
 esac
 
+# SET PROMPT ITEMS
+ESCON="\["
+ESCOFF="\]"
+P_TIME="\@"
+P_HOSTNAME="\h"
+P_USER="\u"
+P_DIR="\w"
+P_DIR_SM="\W"
+P_SYMBOL="\$ "
+
 # SET COLOR VARS
 if [ "$color_enabled" = yes ]; then
   COLOR_RESET="\033[0m"
@@ -131,16 +141,6 @@ fi
 if [[ $TERM == "linux" ]]; then
   PWHITE="${ESCON}${WHITE}${ESCOFF}"
 fi
-
-# SET PROMPT ITEMS
-ESCON="\["
-ESCOFF="\]"
-P_TIME="\@"
-P_HOSTNAME="\h"
-P_USER="\u"
-P_DIR="\w"
-P_DIR_SM="\W"
-P_SYMBOL="\$ "
 
 ###### PROMPT
 if [[ $prompt_style == "GIT" ]] && [[ -e "$HOME/.bash-git-prompt/gitprompt.sh" ]]; then

@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.21"
-aliasfiledate="2018-03-21"
+aliasfilenum="2.0.22"
+aliasfiledate="2018-04-02"
 
 
 #### VARS
@@ -250,6 +250,9 @@ update-all() {
 #### HOST SETUP AND CONFIG
   # SET TIMEZONE
   alias settimezone="sudo dpkg-reconfigure tzdata"
+  # UPDATE APT-KEY
+  alias getaptkey-goog='curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -'
+  alias getaptkey-docker='curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
   # MAKE SSH KEY
   alias make-key='ssh-keygen -t rsa -b 4096'
   # SEND SSH KEY

@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.22"
-aliasfiledate="2018-04-02"
+aliasfilenum="2.0.23"
+aliasfiledate="2018-04-12"
 
 
 #### VARS
@@ -96,7 +96,6 @@ update-all() {
 #### DOCKER
   alias d='docker'
   alias d-c='docker-compose'
-  # alias drms='docker rm $(docker ps -a -q | grep -v $(docker ps -q))'
   alias drmsc='docker rm $(docker ps -q -f 'status=exited') 2> /dev/null'
   alias drmsi='docker rmi $(docker images -q -f "dangling=true") 2> /dev/null'
   alias drmsv='docker volume prune -f'
@@ -107,10 +106,10 @@ update-all() {
   alias dpsa="docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
   alias dpss="docker ps --format 'table {{.Names}}\t{{.Status}}'"
   alias dpsi="docker ps --format 'table {{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
-  alias dstat="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
-  alias dstats="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
-  alias dstat-b="docker stats --no-stream --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
-  alias dstats-b="docker stats --format 'table {{.Name}}\t({{.CPUPerc}})\t{{.MemPerc}}'"
+  alias dstat="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}'"
+  alias dstatn="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
+  alias dstatp="docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemPerc}}'"
+  alias dstat-s="docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t\t{{.NetIO}}'"
   dockerip () {
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$@"
   }
@@ -175,6 +174,7 @@ update-all() {
 
 #### SYSTEMD
   alias svc-stat='sudo systemctl status'
+  alias svc-status='svc-stat'
   alias svc-start='sudo systemctl start'
   alias svc-stop='sudo systemctl stop'
   alias svc-enable='sudo systemctl enable'
@@ -182,6 +182,8 @@ update-all() {
   alias svc-disable='sudo systemctl disable'
   alias svc-daemon='sudo systemctl daemon-reload'
   alias svc-journal='sudo SYSTEMD_LESS=FRXMK journalctl -u'
+  alias svc-edit='sudo systemctl edit'
+  alias svc-editfull='sudo systemctl edit --full'
 
 #### NETWORK
   # LOCAL IP ADDRESS

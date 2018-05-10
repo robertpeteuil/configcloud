@@ -9,7 +9,7 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.24"
+aliasfilenum="2.0.25"
 aliasfiledate="2018-05-10"
 
 
@@ -238,6 +238,9 @@ update-all() {
 #### GENERAL ALIASES
   # DISPLAY UNATTENDED UPDATE LOG
   alias showuulog='cat /var/log/unattended-upgrades/unattended-upgrades.log'
+  alias showupdatelog='cat /var/log/unattended-upgrades/unattended-upgrades.log'
+  alias showrebootfiles='cat /var/run/reboot-required.pkgs'
+  alias showlivepatch='canonical-livepatch status --verbose'
   # ENABLE SUDOING ALIASES
   alias sudo='sudo '
   # RELOAD SHELL (invoke as a login shell)

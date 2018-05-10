@@ -9,8 +9,8 @@
 #
 
 bashconfigname=".bashrc"
-bashconfignum="2.0.10"
-bashconfigdate="2018-03-21"
+bashconfignum="2.0.11"
+bashconfigdate="2018-05-10"
 
 
 # EXIT IF NOT RUNNING INTERACTIVELY
@@ -66,7 +66,7 @@ pathIf "/usr/lib/go-1.9/bin"
 
 ###### CHECK FOR REBOOT REQUIRED
 if [[ "$OS" == "Linux" ]] && [[ -f /var/run/reboot-required ]]; then
-  echo "** Reboot Required **"
+  echo "*** System restart required ****"
 fi
 
 ###### BASH CONFIG

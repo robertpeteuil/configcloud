@@ -9,8 +9,8 @@
 #
 
 aliasfilename=".aliases"
-aliasfilenum="2.0.23"
-aliasfiledate="2018-04-12"
+aliasfilenum="2.0.24"
+aliasfiledate="2018-05-10"
 
 
 #### VARS
@@ -28,9 +28,10 @@ check-git-installed () {
 
 update-repos () {
   GIT_INST=$(check-git-installed)
+  prev_dir=$(pwd)
   if [[ -e "$HOME/.configcloud/.git" ]] && [[ -n $GIT_INST ]]; then
     echo -e "\n${GREEN}Updating .configcloud repo...${WHITE}"
-    cd "$HOME/.configcloud"; git pull; cd ~
+    cd "$HOME/.configcloud"; git pull; cd "$prev_dir"
     GIT_UPDATE=True
   fi
 }

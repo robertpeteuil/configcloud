@@ -36,9 +36,7 @@ if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
     alias ps='colourify ps'
     alias mtr='colourify mtr'
     alias semanage='colourify semanage'
-    alias getsebool='colourify getsebool'
+    alias getsebool='colourify setsebool'
     alias ifconfig='colourify ifconfig'
-    alias whois='colourify whois'
-    alias iwconfig='colourify iwconfig'
 fi
 

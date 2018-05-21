@@ -47,7 +47,7 @@ conf.diff
 conf.wdiff
 
 # last/who command
-(^|[/\w\.]+/)(lastb?|who|lastlog)\b
+(^|[/\w\.]+/)(last|who)\s?
 conf.last
 
 # ldap tools
@@ -251,16 +251,12 @@ conf.dnf
 conf.nmap
 
 # uptime | w
-(^|[/\w\.]+/)(uptime|w)\b
+(^|[/\w\.]+/)(uptime|w)\s?
 conf.uptime
 
 # getfacl
 (^|[/\w\.]+/)getfacl\s?
 conf.getfacl
-
-# ntpdate
-(^|[/\w\.]+/)ntpdate\s?
-conf.ntpdate
 
 # showmount
 (^|[/\w\.]+/)showmount\s?
@@ -273,17 +269,4 @@ conf.ant
 # # apache maven command
 (^|[/\w\.]+/)mvn\s?
 conf.mvn
-
-# iwconfig command
-(^|[/\w\.]+/)iwconfig\s?
-conf.iwconfig
-
-
-# lolcat command
-(^|[/\w\.]+/)lolcat\s?
-conf.lolcat
-
-# whois
-(^|[/\w\.]+/)whois\s?
-conf.whois
 

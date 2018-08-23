@@ -255,7 +255,8 @@ update-all() {
 
 #### HOST SETUP AND CONFIG
   # SET TIMEZONE
-  alias settimezone="sudo dpkg-reconfigure tzdata"
+  alias settimezone="sudo timedatectl set-timezone "
+  # alias settimezone="sudo dpkg-reconfigure tzdata"
   # UPDATE APT-KEY
   alias getaptkey-goog='curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -'
   alias getaptkey-docker='curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
